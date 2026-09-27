@@ -19,6 +19,10 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+app.get('/health', (req, res) => {
+res.status(200).json({ status: 'ok' });
+});
+
 // تهيئة Socket.IO عبر الـ HTTP Server
 initSocket(server);
 
@@ -35,4 +39,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`📡 Server running on port ${PORT}`));
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`📡 Server running on port ${PORT}`);
+});
