@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { store } from './store';
 import App from './App';
+import './Index.css';
 import { AuthInitializer } from "./features/auth/components/AuthInitializer";
 
 const queryClient = new QueryClient({
