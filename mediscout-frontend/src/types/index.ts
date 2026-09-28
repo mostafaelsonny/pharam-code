@@ -41,6 +41,7 @@ export interface Prescription {
     | 'ORDER_PROCESSING'
     | 'ORDER_COMPLETED'
     | 'CANCELLED';
+  cancellationReason?: string;
   paymentMethod?: 'CASH_ON_DELIVERY' | 'CARD';
   orderedAt?: string;
   items: PrescriptionItem[];

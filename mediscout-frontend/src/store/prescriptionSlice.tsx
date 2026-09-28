@@ -197,13 +197,13 @@ export const fetchDeliveryPrescriptionsThunk = createAsyncThunk<
 // 9- Order status update by the delivery representative (start of delivery or final delivery)
 export const updateDeliveryStatusThunk = createAsyncThunk<
   { success: boolean; message: string; prescription: Prescription },
-  { prescriptionId: string; status: 'ORDER_PROCESSING' | 'ORDER_COMPLETED' | 'CANCELLED' },
+  { prescriptionId: string; status: 'ORDER_PROCESSING' | 'ORDER_COMPLETED' | 'CANCELLED'; cancelReason?: string },
   { rejectValue: string }
 >(
   "prescription/updateDeliveryStatus",
-  async ({ prescriptionId, status }, { rejectWithValue }) => {
+  async ({ prescriptionId, status, cancelReason }, { rejectWithValue }) => {
     try {
-      return await updateDeliveryStatusAPI(prescriptionId, status);
+      return await updateDeliveryStatusAPI(prescriptionId, status, cancelReason);
     } catch (err: any) {
       return rejectWithValue(
         err.response?.data?.message || "حدث خطأ أثناء تحديث حالة الطلب",

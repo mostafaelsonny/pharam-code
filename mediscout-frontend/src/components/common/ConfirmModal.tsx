@@ -11,6 +11,7 @@ export interface ConfirmModalProps {
   isLoading?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  children?: React.ReactNode;
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -23,6 +24,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isLoading = false,
   onConfirm,
   onCancel,
+  children,
 }) => {
   if (!isOpen) return null;
 
@@ -93,6 +95,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           <div className="mt-4 bg-slate-50 border border-slate-100 p-3.5 rounded-xl text-xs text-slate-700 leading-relaxed font-medium">
             {message}
           </div>
+          
+          {children && (
+            <div className="mt-4">
+              {children}
+            </div>
+          )}
         </div>
 
         <div className="bg-slate-50/80 px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-2.5">

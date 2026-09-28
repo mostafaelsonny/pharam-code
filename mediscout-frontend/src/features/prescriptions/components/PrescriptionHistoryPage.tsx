@@ -14,6 +14,7 @@ import {
   Pill,
   ChevronDown,
   ChevronUp,
+  AlertTriangle,
   RefreshCw,
   FileText,
   Calendar,
@@ -321,6 +322,16 @@ export const PrescriptionHistoryPage: React.FC = () => {
                         </span>
                       </div>
                     </div>
+
+                    {prescription.status === 'CANCELLED' && prescription.cancellationReason && (
+                      <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl text-rose-800">
+                        <strong className="block text-sm font-bold mb-1 flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4" />
+                          سبب الإلغاء:
+                        </strong>
+                        <p className="text-xs font-medium leading-relaxed">{prescription.cancellationReason}</p>
+                      </div>
+                    )}
 
                     {/* Items Table */}
                     <div className="space-y-2">

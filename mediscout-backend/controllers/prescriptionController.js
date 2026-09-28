@@ -305,9 +305,26 @@ export const getMyPrescriptions = asyncHandler(async (req, res) => {
     .populate("pharmacistId", "name email")
     .sort({ updatedAt: -1, createdAt: -1 });
 
+  // تصفية الروشتات: إذا كانت الروشتة READY_FOR_CART ولكن لا تحتوي على أي أدوية يمكن شراؤها
+  // (إما لعدم توفرها في المخزن نهائياً، أو لرفض المريض للبدائل)، فلا نعرضها في السجل.
+  const validPrescriptions = prescriptions.filter((prescription) => {
+    if (prescription.status === "READY_FOR_CART") {
+      const hasPurchasableItems = prescription.items.some(
+        (item) =>
+          item.inStock &&
+          item.availabilityStatus !== "OUT_OF_STOCK" &&
+          (!item.isAlternative || item.patientDecision !== "REJECTED")
+      );
+      if (!hasPurchasableItems) {
+        return false;
+      }
+    }
+    return true;
+  });
+
   res.status(200).json({
     success: true,
-    prescriptions,
+    prescriptions: validPrescriptions,
   });
 });
 
@@ -384,7 +401,7 @@ export const getDeliveryPrescriptions = asyncHandler(async (req, res) => {
 // Ensure that the correct delivery is the one who updated the prescription ...
 // then update the prescription with the updated status .
 export const updateDeliveryStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
+  const { status, cancelReason } = req.body;
   const prescription = await Prescription.findById(req.params.id);
 
   if (!prescription) {
@@ -405,6 +422,9 @@ export const updateDeliveryStatus = asyncHandler(async (req, res) => {
   }
 
   prescription.status = status;
+  if (status === 'CANCELLED' && cancelReason) {
+    prescription.cancellationReason = cancelReason;
+  }
   await prescription.save();
 
   // إرسال تنبيهات لحظية فور تحديث المندوب لحالة الطلب

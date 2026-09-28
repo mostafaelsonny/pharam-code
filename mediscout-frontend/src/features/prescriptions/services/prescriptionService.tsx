@@ -142,11 +142,12 @@ export const getDeliveryPrescriptionsAPI = async (): Promise<Prescription[]> => 
 // 8. تحديث حالة الطلب بواسطة مندوب التوصيل
 export const updateDeliveryStatusAPI = async (
   prescriptionId: string,
-  status: 'ORDER_PROCESSING' | 'ORDER_COMPLETED' | 'CANCELLED'
+  status: 'ORDER_PROCESSING' | 'ORDER_COMPLETED' | 'CANCELLED',
+  cancelReason?: string
 ): Promise<{ success: boolean; message: string; prescription: Prescription }> => {
   const response = await apiClient.put<{ success: boolean; message: string; prescription: Prescription }>(
     `/prescriptions/${prescriptionId}/delivery-status`,
-    { status }
+    { status, cancelReason }
   );
   return response.data;
 };

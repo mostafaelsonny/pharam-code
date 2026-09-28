@@ -90,6 +90,7 @@ const prescriptionSchema = new mongoose.Schema(
       ],
       default: 'PENDING',
     },
+    cancellationReason: { type: String, default: '' },
     totalAmount: { type: Number, default: 0 },
   },
   { timestamps: true }

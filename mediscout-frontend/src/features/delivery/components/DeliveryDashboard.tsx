@@ -84,6 +84,7 @@ export const DeliveryDashboard: React.FC = () => {
     title: string;
     message: string;
     type: 'warning' | 'danger' | 'info';
+    cancelReason: string;
   }>({
     isOpen: false,
     prescriptionId: '',
@@ -91,6 +92,7 @@ export const DeliveryDashboard: React.FC = () => {
     title: '',
     message: '',
     type: 'info',
+    cancelReason: '',
   });
 
   const handleStatusUpdate = (
@@ -111,7 +113,7 @@ export const DeliveryDashboard: React.FC = () => {
       type = 'warning';
     } else if (status === 'CANCELLED') {
       title = 'إلغاء الطلب';
-      message = 'هل أنت متأكد من إلغاء هذا الطلب؟';
+      message = 'يرجى كتابة سبب الإلغاء بوضوح ليتم تسجيله في النظام وإبلاغ المريض به:';
       type = 'danger';
     }
 
@@ -122,13 +124,20 @@ export const DeliveryDashboard: React.FC = () => {
       title,
       message,
       type,
+      cancelReason: '',
     });
   };
 
   const confirmStatusUpdate = async () => {
-    const { prescriptionId, status } = statusModal;
+    const { prescriptionId, status, cancelReason } = statusModal;
+    
+    if (status === 'CANCELLED' && !cancelReason.trim()) {
+      alert('يرجى إدخال سبب الإلغاء');
+      return;
+    }
+    
     setStatusModal((prev) => ({ ...prev, isOpen: false }));
-    await dispatch(updateDeliveryStatusThunk({ prescriptionId, status }));
+    await dispatch(updateDeliveryStatusThunk({ prescriptionId, status, cancelReason }));
     dispatch(fetchDeliveryPrescriptionsThunk());
   };
 
@@ -500,7 +509,17 @@ export const DeliveryDashboard: React.FC = () => {
         cancelText="تراجع"
         onConfirm={confirmStatusUpdate}
         onCancel={() => setStatusModal((prev) => ({ ...prev, isOpen: false }))}
-      />
+      >
+        {statusModal.status === 'CANCELLED' && (
+          <textarea
+            value={statusModal.cancelReason}
+            onChange={(e) => setStatusModal(prev => ({ ...prev, cancelReason: e.target.value }))}
+            placeholder="اكتب سبب الإلغاء هنا... (مثال: العميل رفض الاستلام، العنوان خاطئ...)"
+            className="w-full mt-2 p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent resize-none h-24"
+            required
+          />
+        )}
+      </ConfirmModal>
     </div>
   );
 };
