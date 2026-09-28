@@ -7,7 +7,6 @@ import {
   toggleAlternativeDecision,
   updatePatientDecisionsThunk,
 } from '../../../store/prescriptionSlice';
-import { socketService } from '../../../services/socketService';
 import { 
   ClipboardCheck, 
   ShieldCheck, 
@@ -40,43 +39,20 @@ export const PrescriptionResult: React.FC = () => {
   const { currentPrescription, warnings } = useSelector(
     (state: RootState) => state.prescription
   );
-  const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-  // الاستماع اللحظي لتحديثات الروشتة عبر السوكيت وقنوات البث
+  // التحقق من حالة الروشتة عند تحميل الصفحة (للاسترداد بعد Refresh)
+  // ملاحظة: الـ Socket.IO listener المسؤول عن التحديثات اللحظية
+  // تم نقله إلى AuthInitializer ليكون دائماً بغض النظر عن حالة الروشتة.
   useEffect(() => {
     const id = currentPrescription?._id;
     const status = currentPrescription?.status;
 
     if (!id || status !== 'PENDING_PHARMACIST_REVIEW') return;
 
+    // استعلام أولي عند تحميل الصفحة للتأكد من آخر حالة
     dispatch(checkPrescriptionStatusThunk(id));
-    
-    const socket = socketService.getSocket();
-    if (user?._id) {
-      socketService.joinUserRoom(user._id, user.role);
-    }
-
-    const handleStatusUpdate = (eventData: any) => {
-      if (eventData?.prescription?._id === id || eventData?.userId === user?._id) {
-        dispatch(checkPrescriptionStatusThunk(id));
-      }
-    };
-
-    console.log(currentPrescription)
-    socket.on('prescription:status_updated', handleStatusUpdate);
-    
-    const channel = new BroadcastChannel('prescription_events');
-    channel.onmessage = (event) => {
-      if (event.data?.type === 'NEW_PRESCRIPTION_APPROVED') {
-        dispatch(checkPrescriptionStatusThunk(id));
-      }
-    };
-
-    return () => {
-      socket.off('prescription:status_updated', handleStatusUpdate);
-      channel.close();
-    };
-  }, [currentPrescription?._id, currentPrescription?.status, dispatch, user?._id, user?.role]);
+  }, [currentPrescription?._id, currentPrescription?.status, dispatch]);
 
   if (!currentPrescription) {
     return (
