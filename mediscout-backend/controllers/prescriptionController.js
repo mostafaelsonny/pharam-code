@@ -10,8 +10,6 @@ import {
   notifyDeliveryNewOrder,
 } from "../socket.js";
 
-
-
 // 1- receive request body and destructure it to extract the data ...
 // 2- Integration with Gemini to send the prescription and extract the medications from it...
 // 3- turn the texeted gemini response into json and make loop for each extracted drug ...
@@ -313,7 +311,7 @@ export const getMyPrescriptions = asyncHandler(async (req, res) => {
         (item) =>
           item.inStock &&
           item.availabilityStatus !== "OUT_OF_STOCK" &&
-          (!item.isAlternative || item.patientDecision !== "REJECTED")
+          (!item.isAlternative || item.patientDecision !== "REJECTED"),
       );
       if (!hasPurchasableItems) {
         return false;
@@ -422,12 +420,12 @@ export const updateDeliveryStatus = asyncHandler(async (req, res) => {
   }
 
   prescription.status = status;
-  if (status === 'CANCELLED' && cancelReason) {
+  if (status === "CANCELLED" && cancelReason) {
     prescription.cancellationReason = cancelReason;
   }
   await prescription.save();
 
-  // إرسال تنبيهات لحظية فور تحديث المندوب لحالة الطلب
+  // إرسال تنبيهات لحظية فور تحديث المندوب لحالة الطلب ######################
   notifyPatientPrescriptionStatus(prescription.userId, prescription);
   if (prescription.deliveryId) {
     notifyDeliveryNewOrder(prescription.deliveryId, prescription);
@@ -511,7 +509,17 @@ export const checkoutPrescription = asyncHandler(async (req, res) => {
         prescription.deliveryId = deliveryId;
       }
 
-      prescription.paymentMethod = paymentMethod || "CASH_ON_DELIVERY";
+      const selectedPaymentMethod = paymentMethod || "CASH_ON_DELIVERY";
+
+      if (selectedPaymentMethod === "CARD") {
+        return res.status(400).json({
+          success: false,
+          message:
+            "للدفع بالبطاقة الائتمانية، يرجى استخدام مسار Stripe المخصص (createStripeCheckoutSession).",
+        });
+      }
+
+      prescription.paymentMethod = "CASH_ON_DELIVERY";
 
       // 6. إعادة حساب الإجمالي من بيانات الـ Database
       prescription.totalAmount = prescription.items.reduce((sum, item) => {

@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediScout — أطلس الكود والـ Workflows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1c1917;
+      --muted: #57534e;
+      --paper: #f7f3ec;
+      --card: #fffdf8;
+      --line: #e7dccb;
+      --teal: #0f4c4a;
+      --gold: #b45309;
+      --navy: #1c1917;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans Arabic", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.85;
+    }
+    .wrap { display: grid; grid-template-columns: 270px 1fr; min-height: 100vh; }
+    aside {
+      position: sticky; top: 0; height: 100vh; overflow: auto;
+      background: #1c1917; color: #e7e5e4; padding: 24px 16px 40px;
+      border-left: 4px solid #b45309;
+    }
+    aside h1 { font-family: Amiri, serif; margin: 0 0 6px; font-size: 1.45rem; color: #fff; }
+    aside .sub { font-size: 0.8rem; color: #a8a29e; margin-bottom: 14px; }
+    aside input {
+      width: 100%; padding: 9px 11px; border: 0; border-radius: 8px;
+      font-family: inherit; background: #292524; color: #fff; margin-bottom: 12px;
+    }
+    aside a { display: block; color: #d6d3d1; text-decoration: none; padding: 6px 8px; border-radius: 6px; font-size: 0.84rem; }
+    aside a:hover { background: rgba(180, 83, 9, 0.25); color: #fff; }
+    main { padding: 32px 40px 80px; max-width: 1000px; }
+    .hero {
+      background: linear-gradient(135deg, #1c1917, #0f4c4a);
+      color: #fff; padding: 26px 28px; border-radius: 16px; margin-bottom: 24px;
+    }
+    .hero h2 { font-family: Amiri, serif; margin: 0 0 8px; }
+    h2.sec {
+      font-family: Amiri, serif; color: #0f4c4a;
+      border-bottom: 2px solid #b45309; padding-bottom: 8px; margin: 40px 0 16px;
+    }
+    h3.subh { color: #9a3412; margin: 22px 0 10px; font-size: 1.15rem; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; }
+    summary {
+      cursor: pointer; list-style: none; padding: 14px 16px; font-weight: 700; color: #0f4c4a;
+    }
+    summary::-webkit-details-marker { display: none; }
+    details[open] summary { border-bottom: 1px solid var(--line); }
+    .ans { padding: 6px 16px 16px; color: var(--muted); }
+    .ans p, .ans li { margin: 8px 0; }
+    .ans ul, .ans ol { padding-right: 20px; }
+    strong { color: var(--ink); }
+    code { font-family: ui-monospace, Consolas, monospace; font-size: 0.86em; background: #f5efe4; padding: 1px 5px; border-radius: 4px; }
+    .flow {
+      font-family: ui-monospace, Consolas, monospace; background: #1c1917; color: #fde68a;
+      padding: 14px; border-radius: 10px; overflow-x: auto; font-size: 0.78rem;
+      direction: ltr; text-align: left; white-space: pre; line-height: 1.55;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 8px 0; }
+    th, td { border: 1px solid var(--line); padding: 7px 9px; text-align: right; vertical-align: top; }
+    th { background: #f3eee4; }
+    .why { background: #ecfdf5; border-right: 4px solid #047857; padding: 10px 12px; border-radius: 8px; margin-top: 10px; }
+    .io { background: #fff7ed; border-right: 4px solid #c2410c; padding: 10px 12px; border-radius: 8px; margin-top: 8px; }
+    .hidden { display: none !important; }
+    @media (max-width: 900px) {
+      .wrap { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      main { padding: 18px 14px 60px; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+<aside>
+  <h1>أطلس الكود</h1>
+  <div class="sub">من الكليك → الـ store/query → الـ API → الـ middleware → الـ controller → الداتابيز → الرد</div>
+  <input id="qsearch" type="search" placeholder="ابحث في الشرح..." />
+  <nav>
+    <a href="#path">مسار الطلب العام</a>
+    <a href="#authd">Auth عميق</a>
+    <a href="#mw">Middleware</a>
+    <a href="#models">Models</a>
+    <a href="#routes">Routes</a>
+    <a href="#ctrl-auth">Controllers: Auth</a>
+    <a href="#ctrl-user">Controllers: Users</a>
+    <a href="#ctrl-drug">Controllers: Drugs</a>
+    <a href="#ctrl-int">Controllers: Interactions</a>
+    <a href="#ctrl-rx">Controllers: Prescriptions</a>
+    <a href="#sock">socket.js</a>
+    <a href="#store">Redux Store</a>
+    <a href="#tq">TanStack Query</a>
+    <a href="#bind">الربط Store ↔ Query</a>
+    <a href="#comp">المكوّنات</a>
+    <a href="#wf">كل الـ Workflows</a>
+    <a href="#svc">طبقة Services</a>
+    <a href="#boot">الإقلاع والملفات الأساسية</a>
+    <a href="#extra-red">extraReducers بالتفصيل</a>
+    <a href="#money">حساب الفلوس والمخزن</a>
+    <a href="#q">أسئلة فهم + إجابات</a>
+  </nav>
+</aside>
+<main>
+<section class="hero" id="path">
+  <h2>الفكرة اللي تمشي عليها وأنت بتقرأ أي فانكشن</h2>
+  <p>الواجهة مش بتعمل الشغل الثقيل. هي بتجمع input، تتحقق شكلًا (Zod)، وتبعت. الحقيقة في الباك: هوية من التوكن، قواعد من الـ controller، بيانات من Mongo. الـ store (Redux) للرحلة الطويلة + السوكت. TanStack Query للكاش بتاع قوائم CRUD.</p>
+</section>
+
+<article class="card"><details open>
+  <summary>إيه اللي بيحصل بالظبط لما المستخدم يعمل أي عملية؟</summary>
+  <div class="ans">
+    <div class="flow">UI event
+  → (اختياري) Zod / react-hook-form
+  → dispatch(thunk)   أو   mutation.mutate() / useQuery
+  → API function في services/*  (axios)
+  → apiClient interceptor يلصق Bearer من localStorage
+  → HTTP إلى Express route
+  → middleware: optionalProtect | protect | authorize
+  → controller
+  → Model / Gemini / Stripe / mongoose session
+  → (أحيانًا) socket notify
+  → JSON response
+  → thunk fulfilled أو query cache
+  → المكوّن يعيد الرسم من Redux أو من data بتاعة Query</div>
+    <p>لو فهمت السطر ده، باقي الملف تطبيق عليه على كل فانكشن.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="authd">Authentication و Authorization — فهم عميق</h2>
+
+<article class="card"><details open>
+  <summary>السلسلة كاملة: من الباسورد للتوكن لـ req.user للصفحة</summary>
+  <div class="ans">
+    <p><strong>1) إنشاء السر:</strong> في <code>userModel</code> قبل <code>save</code> لو الباسورد اتعدّل: <code>bcrypt.genSalt(10)</code> ثم hash. ليه؟ عشان الداتابيز متتخزنش فيها الباسورد الخام. المقارنة بعدين بـ <code>user.matchPassword(entered)</code> = <code>bcrypt.compare</code>.</p>
+    <p><strong>2) إصدار التوكن:</strong> <code>generateToken(id)</code> في <code>authController</code> تعمل <code>jwt.sign({ id }, JWT_SECRET, { expiresIn: '30d' })</code>. الـ payload هو معرّف المستخدم فقط، مش الدور. ليه؟ الدور ممكن يتغيّر (أدمن يحوّله صيدلي). كل request محمي يعيد قراءة المستخدم من مونجو فيحصل على الدور الحالي والحظر.</p>
+    <p><strong>3) التخزين على العميل:</strong> بعد login/register الـ thunk يحط <code>auth_token</code> و<code>auth_user</code> في localStorage ويملأ <code>state.auth</code>. axios يقرأ التوكن في كل طلب.</p>
+    <p><strong>4) استعادة الجلسة:</strong> <code>AuthInitializer</code> لو لقى توكن ينادي <code>getProfileThunk</code> → <code>GET /auth/profile</code> ورا <code>protect</code>. لو التوكن بايظة أو المستخدم محظور/اتمسح، الـ rejected يمسح التخزين المحلي.</p>
+    <p><strong>5) Authentication على الباك:</strong> <code>protect</code> يفك التوكن، يجيب User، يرفض 401/403، ويحط الناتج على <code>req.user</code>. من هنا أي controller يقدر يقول «مين اللي طالب» من غير ما يصدّق body.userId.</p>
+    <p><strong>6) Authorization طبقتين:</strong></p>
+    <ul>
+      <li><strong>دور:</strong> <code>authorize('pharmacist')</code> — هل نوع الحساب مسموح بالمسار؟</li>
+      <li><strong>ملكية المورد:</strong> داخل الـ controller — هل <code>prescription.pharmacistId</code> هو نفس <code>req.user._id</code>؟</li>
+    </ul>
+    <p><strong>7) الواجهة:</strong> <code>ProtectedRoute</code> تقرأ <code>isInitialized</code> ثم <code>isAuthenticated</code> ثم <code>user.role</code>. دي بوابة عرض. المهاجم يعدّيها. الباك هو القفل.</p>
+    <p><strong>8) التسجيل:</strong> <code>registerUser</code> يجبر <code>role: 'user'</code> حتى لو الفرونت بعت pharmacist. إنشاء الكوادر من <code>createUser</code> الأدمن فقط بعد <code>protect + authorize('admin')</code>.</p>
+    <div class="why">الهدف من التصميم: الجلسة stateless تناسب Vercel+Railway، والدور والحظر يتحدثوا فورًا لأننا بنقرأ User من الداتابيز كل request مش من داخل التوكن.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>optionalProtect مقابل protect — امتى وليه؟</summary>
+  <div class="ans">
+    <p><code>protect</code>: مفيش توكن صالحة = يوقف الطلب. للشراء، التاريخ، طابور الصيدلي، الدفع.</p>
+    <p><code>optionalProtect</code>: لو فيه توكن سليمة يحط <code>req.user</code>، لو مفيش يكمل زائر. للرفع وقرارات المريض وجلب روشتة بالـ ID. ليه؟ عشان الزائر يحلّل روشتة قبل ما يعمل حساب، وعند الـ checkout (وهو protect) نربط <code>userId</code>.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="mw">Middleware — كل فانكشن</h2>
+
+<article class="card"><details>
+  <summary><code>protect</code></summary>
+  <div class="ans">
+    <div class="io"><strong>بتستلم:</strong> <code>req.headers.authorization</code> المتوقع شكل <code>Bearer &lt;jwt&gt;</code>.<br /><strong>بتحط على الطلب:</strong> <code>req.user</code> (مستند User من غير password).<br /><strong>بترد / ترمي:</strong> 401 لو مفيش هيدر أو التوكن بايظة/منتهية أو المستخدم اتمسح. 403 لو <code>isBlocked</code>. غير كده <code>next()</code>.</div>
+    <p>المنطق: تقطع السلسلة، تتحقق التوقيع بـ <code>JWT_SECRET</code>، تقرأ <code>decoded.id</code>، <code>User.findById</code>. ليه find تاني؟ عشان نشوف الحظر والدور الحقيقي ونضمن إن الحساب لسه موجود.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>optionalProtect</code></summary>
+  <div class="ans">
+    <p>نفس محاولة فك التوكن، لكن أي فشل بيتتجاهل. لو المستخدم موجود ومش محظور يتحط على <code>req.user</code>. دائمًا <code>next()</code>. ليه؟ مسار عام يقدر يستفيد من الهوية لو موجودة من غير ما يجبر لوجين.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>authorize(...roles)</code></summary>
+  <div class="ans">
+    <p>دي مش middleware جاهزة، دي <strong>factory</strong>: بتناديها <code>authorize('pharmacist')</code> فترجع دالة. الدالة تشوف <code>req.user.role</code> ضمن القائمة. لازم تيجي بعد <code>protect</code> لأن من غيره <code>req.user</code> فاضي → 403.</p>
+    <p>ليه منفصلة عن protect؟ عشان نفس الهوية تتخدم مسارات بأدوار مختلفة من غير تكرار فك التوكن.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>middleware تانية مش في مجلد middleware لكن بتعدي على كل الطلبات</summary>
+  <div class="ans">
+    <ul>
+      <li><code>cors()</code> في server.js: يسمح للمتصفح ينادي API من دومين تاني.</li>
+      <li><code>express.json({ limit: '50mb' })</code>: يفسّر JSON ويدعم صورة Base64 كبيرة.</li>
+      <li><code>express-async-handler</code> لافّ كل controller: أي throw جوّه async يتوجه لـ Express بدل ما الـ promise تتعلق.</li>
+    </ul>
+  </div>
+</details></article>
+
+<h2 class="sec" id="models">Models — شكل الحقيقة في مونجو</h2>
+
+<article class="card"><details>
+  <summary>User</summary>
+  <div class="ans">
+    <p>حقول: name, email (unique lowercase), password, role enum (user/pharmacist/admin/delivery), isBlocked, timestamps.</p>
+    <p><code>pre('save')</code>: تشفير باسورد عند التغيير فقط (لو حفظت اسم من غير باسورد مش يعيد الـ hash على الهاش القديم فيبوّظ اللوجين).</p>
+    <p><code>matchPassword</code>: مقارنة اللوجين. ليه على الموديل مش في الـ controller؟ قاعدة المستخدم تخص الكيان نفسه.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>Drug</summary>
+  <div class="ans">
+    <p>tradeName, activeIngredient (مصفوفة مواد)، category, price, stockQuantity, dosageForm. المواد مصفوفة لأن دواء مركب. المخزن رقم بيتناقص atomically في الـ checkout.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>Interaction</summary>
+  <div class="ans">
+    <p>زوج ingredientA/B (lowercase)، severity، description، recommendation. بتتقارن مع مواد الروشتة بعد التجميع. مش علاقة بالـ User؛ جدول معرفة طبية مبسّط.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>Prescription — أهم document</summary>
+  <div class="ans">
+    <p><code>userId</code> اختياري (زائر). <code>pharmacistId</code> إجباري. <code>deliveryId</code> عند الطلب. <code>originalImage</code> data+mimeType. <code>items[]</code> لقطة: أسماء، سعر، كمية، توفر، بديل، ملاحظات صيدلي، reviewStatus، patientDecision. <code>warningsFound</code> أرشيف التداخل. paymentMethod، orderedAt، status enum، cancellationReason، totalAmount.</p>
+    <p>ليه items embedded؟ الفاتورة التاريخية متتغيرش لو سعر الدواء اتحدّث بعد أسبوع. drugId موجود عشان الخصم من نفس صف المخزن.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="routes">خريطة الـ Routes</h2>
+
+<article class="card"><details open>
+  <summary>كل المسارات ومن يعدّي عليها</summary>
+  <div class="ans">
+    <p><code>server.js</code> يركّب: <code>/api/drugs</code> <code>/api/interactions</code> <code>/api/prescriptions</code> <code>/api/auth</code> <code>/api/users</code> و<code>GET /health</code>.</p>
+    <table>
+      <tr><th>Route</th><th>Middleware</th><th>Controller</th></tr>
+      <tr><td>POST /api/auth/register</td><td>—</td><td>registerUser</td></tr>
+      <tr><td>POST /api/auth/login</td><td>—</td><td>loginUser</td></tr>
+      <tr><td>GET/PUT /api/auth/profile</td><td>protect</td><td>get/update UserProfile</td></tr>
+      <tr><td>GET /api/users/pharmacists</td><td>عام</td><td>getActivePharmacists</td></tr>
+      <tr><td>GET /api/users/delivery-reps</td><td>عام</td><td>getActiveDeliveryReps</td></tr>
+      <tr><td>باقي /api/users/*</td><td>protect + admin</td><td>CRUD + block</td></tr>
+      <tr><td>GET/POST /api/drugs و PUT/DELETE /:id</td><td>لا حماية في الكود الحالي</td><td>drugController</td></tr>
+      <tr><td>POST /api/interactions/check</td><td>—</td><td>checkInteractions</td></tr>
+      <tr><td>POST /prescriptions/process</td><td>optionalProtect</td><td>processPrescription</td></tr>
+      <tr><td>PUT /:id/patient-decisions</td><td>optionalProtect</td><td>updatePatientDecisions</td></tr>
+      <tr><td>GET /my-history</td><td>protect</td><td>getMyPrescriptions</td></tr>
+      <tr><td>POST /:id/checkout</td><td>protect</td><td>checkoutPrescription</td></tr>
+      <tr><td>POST /:id/create-checkout-session</td><td>protect</td><td>createStripeCheckoutSession</td></tr>
+      <tr><td>POST /:id/verify-payment</td><td>protect</td><td>verifyStripePayment</td></tr>
+      <tr><td>GET /pharmacist-queue و /pending</td><td>protect + pharmacist</td><td>getPharmacistPrescriptions</td></tr>
+      <tr><td>PUT /:id/pharmacist-approve</td><td>protect + pharmacist</td><td>approveByPharmacist</td></tr>
+      <tr><td>GET /delivery-queue</td><td>protect + delivery</td><td>getDeliveryPrescriptions</td></tr>
+      <tr><td>PUT /:id/delivery-status</td><td>protect + delivery</td><td>updateDeliveryStatus</td></tr>
+      <tr><td>GET /:id</td><td>optionalProtect</td><td>getPrescriptionById</td></tr>
+    </table>
+    <p>ليه <code>/pending</code> قبل <code>/:id</code>؟ لو العكس، كلمة pending هتتفسّر كـ ObjectId.</p>
+    <p>ملاحظة فهم: الفرونت يبعت أحيانًا <code>pharmacistId</code> كـ query/body في طابور الصيدلي والاعتماد، لكن الباك <strong>بيتغاضي عنها</strong> وياخد <code>req.user._id</code>. مصدر الهوية هو التوكن.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="ctrl-auth">authController</h2>
+
+<article class="card"><details>
+  <summary><code>generateToken(id)</code> — مساعدة داخلية</summary>
+  <div class="ans">
+    <p>بتاخد ObjectId، ترجع JWT. مش endpoint. بتتندى بعد register/login/updateProfile عشان الفرونت يحدّث التوكن لو الإيميل/البيانات اتغيّرت.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>registerUser</code></summary>
+  <div class="ans">
+    <div class="io">من body: name, email, password. بيرد 201: _id, name, email, role, token. أو 400 لو الإيميل موجود.</div>
+    <p>يتأكد الإيميل مش متسجل → <code>User.create</code> مع role ثابت user (الـ pre save يشفّر) → يصدر توكن. ليه مش نسمح بدور من الفرونت؟ منع تصعيد صلاحيات.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>loginUser</code></summary>
+  <div class="ans">
+    <p>body: email, password. يلاقي المستخدم، <code>matchPassword</code>، لو محظور 403، لو غلط 401 برسالة عامة (مش «الإيميل غلط» لوحده عشان enumeration). النجاح: نفس شكل register + token.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getUserProfile</code></summary>
+  <div class="ans">
+    <p>مفيش body. الهوية من <code>req.user._id</code> بعد protect. يجيب المستخدم من غير باسورد. دي اللي بتثبت إن التوكن لسه شغالة عند فتح الموقع.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>updateUserProfile</code></summary>
+  <div class="ans">
+    <p>body اختياري: name, email, password. يحمّل المستخدم، يعدّل، <code>save</code> (لو باسورد جديد الـ hook يشفّر)، ويرجع بيانات + توكن جديد. ليه توكن جديد؟ لو البيانات التعريفية اتغيّرت تفضل الجلسة متسقة مع اللي في الشاشة.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="ctrl-user">userController</h2>
+
+<article class="card"><details>
+  <summary><code>getUsers</code> (أدمن)</summary>
+  <div class="ans">
+    <p>query: page, limit, search, role. يبني فلتر regex على الاسم/الإيميل + فلتر دور. countDocuments ثم find مع skip/limit. بيرد users + page + pages + totalUsers. ليه صفحات؟ قائمة الأدمن متكبرش الـ payload.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>createUser</code> (أدمن)</summary>
+  <div class="ans">
+    <p>body: name, email, password, role. يمنع إيميل مكرر. ينشئ بأي دور (صيدلي/مندوب/أدمن). بيرد المستخدم من غير توكن لوجين — الحساب يتخلّق، صاحبه يعمل login بعدين. ليه منفصل عن register؟ register للعامة، ده أداة تشغيل للنظام.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getUserById</code> / <code>updateUser</code> / <code>deleteUser</code> / <code>toggleBlockUser</code></summary>
+  <div class="ans">
+    <p>كلها params.id. التحديث يقدر يغيّر name/email/role/password. الحذف والحظر يرفضوا لو الهدف هو نفس الأدمن الحالي (متنساش نفسك برّه النظام). الحظر يعكس isBlocked. ليه الحظر بدل الحذف دائمًا؟ التوكن القديمة تفشل عند أول protect، والبيانات التاريخية للروشتات تفضل ليها مرجع مستخدم.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getActivePharmacists</code> و <code>getActiveDeliveryReps</code></summary>
+  <div class="ans">
+    <p>عامة. find بالدور و isBlocked false، select _id name email فقط. المريض يحتاج يختار صيدلي قبل الرفع ومندوب قبل الدفع. مش بنرجّع باسورد ولا محظورين.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="ctrl-drug">drugController</h2>
+
+<article class="card"><details>
+  <summary><code>getDrugs</code></summary>
+  <div class="ans">
+    <p>query: page, limit, search (tradeName regex), category, activeIngredient ($in regex). count + find مرتّب بالأحدث. بيرد drugs, page, pages, totalDrugs. ده مصدر قائمة المخزن في الفرونت عبر React Query.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>createDrug</code> / <code>updateDrug</code> / <code>deleteDrug</code></summary>
+  <div class="ans">
+    <p>create: لو tradeName موجود 400. المادة الفعالة تتحوّل لمصفوفة حتى لو جت سترنج. update: يجد بالـ id ويحدّث الحقول (السعر والكمية بـ ?? عشان الصفر يبقى مسموح). delete: deleteOne. ليه المخزن هنا مش جوه الروشتة؟ الروشتة لقطة؛ المخزن حقيقة حيّة للكمية المتاحة للطلبات الجاية.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="ctrl-int">interactionController</h2>
+
+<article class="card"><details>
+  <summary><code>checkInteractions</code></summary>
+  <div class="ans">
+    <p>body.ingredients مصفوفة. لو أقل من عنصرين يرجع warnings فاضية. يعمل lowercase ويبحث أزواج في الجدول. الـ processPrescription مش بينادي الـ route ده؛ بيعمل نفس فكرة البحث جواه مباشرة. الـ endpoint موجود لو حبيت تفحص تداخل من برّه مسار الروشتة.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="ctrl-rx">prescriptionController — قلب النظام</h2>
+
+<article class="card"><details open>
+  <summary><code>processPrescription</code> — أطول لوجيك</summary>
+  <div class="ans">
+    <div class="io"><strong>من body:</strong> imageBase64, mimeType, patientName, phone, email, address, pharmacistId.<br /><strong>من middleware:</strong> <code>req.user</code> لو الزائر مسجّل.<br /><strong>بيرد 201:</strong> success, status, requiresPharmacistReview, prescription.</div>
+    <ol>
+      <li>لو نقصت صورة أو فون أو عنوان أو صيدلي → 400.</li>
+      <li>يبعت الصورة + برومبت لـ Gemini يطلب JSON أدوية فقط.</li>
+      <li><code>JSON.parse</code> على النص، ياخد medicines[].</li>
+      <li><strong>لوب على كل دواء:</strong> دور في Drug على tradeName regex وكمية &gt; 0. لو لقى: item AVAILABLE مربوط drugId وسعر المخزن. لو لأ: دور بديل بنفس المادة الفعالة وكمية. لو لقى: ALTERNATIVE_AVAILABLE + suggestedAlternativeFor الاسم الأصلي. لو لأ: OUT_OF_STOCK من غير drugId وسعر 0. في الفروع الحالية requiresPharmacistReview بتتحط true.</li>
+      <li>يجمع المواد الفعالة، يطبّع lowercase، يدور Interactions حيث الاتنين موجودين في القائمة، يحولهم لـ warningsFound.</li>
+      <li>يحسب totalAmount من أسعار المتوفر. status غالبًا PENDING_PHARMACIST_REVIEW.</li>
+      <li>Prescription.create مع userId لو موجود، الصورة، pharmacistId، items.</li>
+      <li>notifyPharmacistNewPrescription ثم الرد.</li>
+    </ol>
+    <div class="why">الهدف: تحويل صورة فوضوية لقائمة قابلة للمراجعة البشرية + تنبيه الصيدلي فورًا، من غير ما نبيع حاجة قبل الاعتماد، ومن غير ما نصدّق أسعار من الفرونت.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getPharmacistPrescriptions</code></summary>
+  <div class="ans">
+    <p>مفيش اعتماد على params. find حيث pharmacistId = req.user._id و status مراجعة، الأحدث أولًا. بيرد count + prescriptions. ليه مش كل الروشتات؟ الداشبورد طابور شغل، مش أرشيف.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>approveByPharmacist</code></summary>
+  <div class="ans">
+    <p>params.id، body.updatedItems اختياري. يجيب الروشتة، 404 لو مش موجودة، 403 لو الصيدلي مش صاحب pharmacistId. لو جت مصفوفة items يستبدلها ويعلّم كل سطر APPROVED (الصيدلي يقدر يضيف/يعدّل/يمسح في المودال قبل ما يبعت). وإلا يمر على الموجود ويعلّمه معتمد. يعيد حساب الإجمالي من inStock فقط. status → READY_FOR_CART. save. notifyPatientPrescriptionStatus. ليه نسمح بتعديل الأصناف؟ الـ AI والبديل الآلي مش نهاية طبية؛ الصيدلي هو المصدر المعتمد قبل ما المريض يدفع.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getPrescriptionById</code></summary>
+  <div class="ans">
+    <p>params.id، populate لاسم الصيدلي. بيرد الروشتة كاملة. الفرونت بيستخدمها بعد الرفع، بعد السوكت، وبعد Stripe. optionalProtect موجود لكن الكود الحالي مش بيفلتر بالمالك.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getMyPrescriptions</code></summary>
+  <div class="ans">
+    <p>userId من التوكن. حالات: السلة الجاهزة + مراحل الأوردر + ملغي. populate صيدلي. بعد الجلب: فلتر جاهز في الذاكرة: READY_FOR_CART من غير صنف قابل للشراء تتشال من العرض. ليه؟ متشوّشش المريض بروشتة معتمدة كلها نفذ أو كلها مرفوضة بدائل.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>updatePatientDecisions</code></summary>
+  <div class="ans">
+    <p>body.items. يمطابق كل سطر بالـ _id أو اسم الدواء ويحدّث patientDecision فقط. يعيد الإجمالي: المتوفر، والبديل يتحسب لو ACCEPTED. ليه منفصل عن checkout؟ المريض يجرّب القبول/الرفض ويشوف السعر قبل ما يفتح صفحة الدفع.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>getDeliveryPrescriptions</code></summary>
+  <div class="ans">
+    <p>deliveryId = req.user._id وحالات الأوردر الأربع. populate صيدلي ومريض. دا شبورد المندوب كله من الفانكشن دي.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>updateDeliveryStatus</code></summary>
+  <div class="ans">
+    <p>body.status و cancelReason. ملكية deliveryId. يسمح فقط PROCESSING / COMPLETED / CANCELLED. يحفظ السبب عند الإلغاء. ينبّه المريض، ولو فيه مندوب ينبّه قناة التوصيل كمان (نفس الحدث يحدّث الشاشات). ليه المندوب مش الصيدلي؟ بعد ORDER_PENDING الشغل لوجستي.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>checkoutPrescription</code> (كاش عند الاستلام)</summary>
+  <div class="ans">
+    <div class="io">protect إجباري. body: patientName, phone, address, paymentMethod, deliveryId, items. params.id الروشتة.</div>
+    <ol>
+      <li>يفتح mongoose session و withTransaction.</li>
+      <li>يجيب الروشتة داخل الـ session. يربط userId بالمستخدم الحالي.</li>
+      <li>لو status مش READY_FOR_CART يفشل — منع شراء مرتين أو شراء قبل الاعتماد.</li>
+      <li>يدمج قرارات المريض من items.</li>
+      <li>يحدّث بيانات التسليم والمندوب وطريقة الدفع (افتراضي كاش).</li>
+      <li>يحسب الإجمالي من الداتابيز مش من رقم الفرونت.</li>
+      <li>لكل صنف مشمول (له drugId، inStock، بديل مقبول أو أصلي): findOneAndUpdate كمية &gt;= المطلوبة ثم $inc سالب. لو مرجعش مستند → 409 ويرجع الـ transaction كله.</li>
+      <li>status ORDER_PENDING + orderedAt ثم save داخل نفس الـ session.</li>
+      <li>بعد النجاح فقط: سوكت للمريض والمندوب.</li>
+    </ol>
+    <div class="why">نضمن الاتساق: إما المخزن والروشتة يتحدّثوا مع بعض، أو ولا حاجة. من غير كده ممكن تبيع علبة اتنين.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>createStripeCheckoutSession</code></summary>
+  <div class="ans">
+    <p>نفس تجهيز البيانات وقرارات المريض وربط userId، لكن <strong>من غير خصم مخزن</strong> لأن الدفع لسه ما تم. paymentMethod CARD. يفلتر الأصناف المشمولة، لو ولا واحد 400. يحفظ الروشتة (لسه READY_FOR_CART). لو مفتاح Stripe ناقص 500. يبني line_items بعملة egp و unit_amount = السعر × 100. ينشئ session: card, mode payment, email المستخدم, client_reference_id = prescriptionId, metadata فيها userId و deliveryId, success/cancel URLs من FRONTEND_URL. بيرد sessionId و url. الفرونت يعمل redirect لـ Stripe. ليه الخصم مش هنا؟ المستخدم ممكن يلغي على صفحة Stripe.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>verifyStripePayment</code></summary>
+  <div class="ans">
+    <p>body.sessionId. يجيب الروشتة. لو أصلًا في حالة أوردر يرجع نجاح (idempotency). retrieve للجلسة من Stripe. لازم client_reference_id يطابق الروشتة، و metadata.userId يطابق req.user، و payment_status paid. بعدين نفس transaction خصم المخزن + ORDER_PENDING. ليه مش نصدّق صفحة النجاح لوحدها؟ أي حد يفتح الرابط. Stripe هي الشاهد.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="sock">socket.js</h2>
+
+<article class="card"><details>
+  <summary><code>initSocket</code> و <code>getIO</code></summary>
+  <div class="ans">
+    <p>initSocket(httpServer) تنشئ Server، cors مفتوح، على connection تستمع join_room: من data.userId و role تدخل user_، pharmacist_، delivery_، role_*. disconnect للّوج. getIO ترجع النسخة أو ترمي لو السيرفر اتنادى قبل التهيئة.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>ثلاث notify</summary>
+  <div class="ans">
+    <p><code>notifyPharmacistNewPrescription(pharmacistId, prescription)</code> بعد الرفع: حدث prescription:new للرومات + بث عام.</p>
+    <p><code>notifyPatientPrescriptionStatus(userId, prescription)</code> بعد اعتماد/checkout/verify/تحديث مندوب: prescription:status_updated.</p>
+    <p><code>notifyDeliveryNewOrder(deliveryId, prescription)</code> بعد checkout/verify وتحديث الحالة: delivery:new_order.</p>
+    <p>الكنترولر مناديهم بعد ما الداتابيز تنجح، مش قبل — عشان متنبهش على عملية فشلت.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="store">Redux Store — فهم عميق</h2>
+
+<article class="card"><details open>
+  <summary>شكل الـ store ليه اتنين slices بس؟</summary>
+  <div class="ans">
+    <p><code>configureStore({ auth, prescription })</code>. كل حاجة ليها رحلة عبر صفحات + سوكت اتاخدت هنا. قوائم الأدوية والمستخدمين <strong>مش</strong> في Redux لأنها cache سيرفر كلاسيكي → Query.</p>
+  </div>
+</details></article>
+
+<h3 class="subh">authSlice — الحالة</h3>
+<article class="card"><details>
+  <summary>initialState ومعنى كل حقل</summary>
+  <div class="ans">
+    <ul>
+      <li><code>user / token</code>: يتقرأوا أول مرة من localStorage عشان الـ refresh ما يمسحش الشكل لحظيًا.</li>
+      <li><code>isAuthenticated</code>: تبدأ false لحد ما getProfile أو login ينجحوا — مهم جدًا مع isInitialized.</li>
+      <li><code>isLoading / error</code>: فورم اللوجين والتسجيل والبروفايل.</li>
+      <li><code>isInitialized</code>: خلصت محاولة معرفة الجلسة؟ ProtectedRoute يستناها.</li>
+    </ul>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>Thunks الأوث — المدخل والمخرج وأثر الـ extraReducers</summary>
+  <div class="ans">
+    <p><strong>loginThunk / registerThunk:</strong> payload إيميل وباسورد (والتسجيل + اسم). بينادوا loginAPI/registerAPI. pending: لودينج. fulfilled: يملأ user+token، isAuthenticated true، يكتب localStorage. rejected: error من رسالة الباك.</p>
+    <p><strong>getProfileThunk:</strong> من غير payload. GET profile. fulfilled: يحدّث user من السيرفر (الدور الحالي) ويكتب auth_user. rejected: يمسح كل شيء المحلي — الجلسة ميتة.</p>
+    <p><strong>updateProfileThunk:</strong> name/email/password. بيرد AuthResponse فيه توكن جديد فيتحط مكان القديم.</p>
+    <p><strong>reducers عادية:</strong> logout يمسح التخزين والحالة. clearAuthError. initializeAuth لو مفيش توكن أصلًا: يعتبر التهيئة خلصت وهو ضيف.</p>
+  </div>
+</details></article>
+
+<h3 class="subh">prescriptionSlice — الحالة</h3>
+<article class="card"><details>
+  <summary>حقول الـ slice وليه كل واحد global</summary>
+  <div class="ans">
+    <ul>
+      <li><code>currentPrescription</code> + <code>warnings</code>: الشاشة الرئيسية، النتيجة، checkout، النجاح.</li>
+      <li><code>pendingPrescriptions</code>: طابور الصيدلي (السوكت يحدّثه وأنت مش على الصفحة أحيانًا عبر AuthInitializer).</li>
+      <li><code>deliveryPrescriptions</code>: طابور المندوب.</li>
+      <li><code>userPrescriptions</code>: سجل المريض.</li>
+      <li><code>selectedPharmacistId</code>: اختيار قبل الإرسال.</li>
+      <li><code>isLoading / error</code>: عمليات الروشتة.</li>
+    </ul>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>كل Thunk: مين بيناديه، بيروح فين، بيعمل إيه في الـ store</summary>
+  <div class="ans">
+    <table>
+      <tr><th>Thunk</th><th>API</th><th>بعد النجاح في الـ store</th></tr>
+      <tr><td>processPrescriptionThunk</td><td>POST /process</td><td>currentPrescription + warnings، يحفظ active_prescription_id، BroadcastChannel للصيدلي على نفس المتصفح</td></tr>
+      <tr><td>fetchPendingPrescriptionsThunk</td><td>GET /pending</td><td>pendingPrescriptions = المصفوفة</td></tr>
+      <tr><td>approveByPharmacistThunk</td><td>PUT pharmacist-approve</td><td>يشيل الروشتة من الطابور، لو هي المعروضة يحدّثها، BroadcastChannel للمريض</td></tr>
+      <tr><td>checkPrescriptionStatusThunk</td><td>GET /:id</td><td>يستبدل currentPrescription (بعد سوكت أو ريفرش)</td></tr>
+      <tr><td>fetchUserPrescriptionsThunk</td><td>GET my-history</td><td>userPrescriptions</td></tr>
+      <tr><td>checkoutPrescriptionThunk</td><td>POST checkout</td><td>يفضي current ويشيل active id (الطلب اتقفل من مساحة العمل)</td></tr>
+      <tr><td>updatePatientDecisionsThunk</td><td>PUT patient-decisions</td><td>current = النسخة المحسوبة من السيرفر</td></tr>
+      <tr><td>fetchDeliveryPrescriptionsThunk</td><td>GET delivery-queue</td><td>deliveryPrescriptions</td></tr>
+      <tr><td>updateDeliveryStatusThunk</td><td>PUT delivery-status</td><td>يستبدل نفس العنصر في المصفوفة</td></tr>
+    </table>
+    <p>Stripe create/verify <strong>مش thunks</strong>: CheckoutPage و CheckoutSuccessPage بينادوا الـ API functions مباشرة ثم checkPrescriptionStatusThunk. ليه؟ الـ redirect لبرّه Stripe يكسر دورة الـ thunk الواحدة، والتحقق مربوط بـ query session_id في الـ URL.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>reducers المحلية (من غير سيرفر)</summary>
+  <div class="ans">
+    <p><code>setSelectedPharmacist</code>: يحفظ الاختيار.</p>
+    <p><code>toggleAlternativeDecision</code>: يعدّل patientDecision على البديل في currentPrescription ويعيد حساب الإجمالي فورًا. ده رد فعل UI. الحفظ الحقيقي بعدين بالـ thunk أو مع checkout.</p>
+    <p><code>resetPrescriptionState</code>: بعد ما تخلّص وتدخل السجل، تفضي مساحة العمل.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="tq">TanStack Query</h2>
+
+<article class="card"><details open>
+  <summary>إعداد QueryClient في main.tsx</summary>
+  <div class="ans">
+    <p>staleTime 5 دقايق، refetchOnWindowFocus false. المعنى: قائمة الأدوية لو رجعت لنفس الفلاتر جوّه 5 دقايق متتعودش تضرب السيرفر. مناسب لمخزن مش بيتغير كل ثانية.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>useInventory.ts — أربع hooks</summary>
+  <div class="ans">
+    <p><code>useGetDrugs(params)</code>: queryKey <code>['drugs', params]</code> عشان البحث والصفحة جزء من المفتاح — تغيير البحث = كاش مختلف. queryFn = fetchDrugsAPI.</p>
+    <p><code>useCreateDrug / useUpdateDrug / useDeleteDrug</code>: mutationFn للـ API، onSuccess يعمل invalidateQueries لمفتاح drugs. ليه invalidate مش نعدّل الكاش يدوي؟ أبسط وضمان إن الصفحات والفلاتر كلها تتعيد fetch وتطابق السيرفر (خصوصًا بعد حذف).</p>
+    <p>المكوّن InventoryPage: يقرأ data.isLoading من الـ query، وعلى الحذف <code>deleteDrugMutation.mutate(id)</code>. DrugFormModal بينادي create/update mutations.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>useAdminUsers.ts</summary>
+  <div class="ans">
+    <p>نفس النمط بمفتاح <code>ADMIN_USERS_QUERY_KEY</code>. getUsers مع placeholderData عشان تغيير الصفحة ما يرمِش القائمة فاضية. create/update/block/delete كلهم invalidate نفس المفتاح. UsersManagementPage هو الأوركيسترا: فلتر محلي → hook → mutate.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="bind">الربط بين Redux و TanStack — أهم فصل فرونت</h2>
+
+<article class="card"><details open>
+  <summary>قاعدة القرار: إمتى slice وإمتى query؟</summary>
+  <div class="ans">
+    <p><strong>Query:</strong> «هاتلي قائمة من السيرفر، كاشّه، بعد التعديل اعمل refetch». مفيش آلة حالات، مفيش سوكت إجباري، المكوّن اللي فاتح الصفحة هو المستهلك الوحيد تقريبًا.</p>
+    <p><strong>Redux:</strong> «في كائن رحّال يعيش عبر راوتس، ويتكتب من سوكت وأكتر من شاشة، وفيه قرارات محلية قبل الحفظ».</p>
+    <p>الاتنين عايشين تحت نفس الشجرة في main: Provider ثم QueryClientProvider ثم AuthInitializer ثم App. مفيش تزامن سحري بينهم. المخزن مش هيحدّث currentPrescription. الروشتة مش بتعمل invalidate للأدوية بعد الخصم (قيد: لو الصيدلي فاتح المخزن أثناء طلب، الكمية ممكن تتقادم لحد staleTime أو ريفرش).</p>
+    <div class="why">لو حطيت الأدوية في Redux هتعيد اختراع cache وloading لكل جدول. لو حطيت الروشتة في Query بس، السوكت هيضطر يعمل queryClient.setQueryData من عشر مفاتيح وصفحات، والـ optimistic للبدائل يبقى أصعب. التقسيم ده هو اللوجيك.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>طبقة services — الجسر المشترك</summary>
+  <div class="ans">
+    <p>Thunks و hooks الـ Query <strong>ما بتناديش axios مباشرة من المكوّن</strong> (ما عدا Stripe في الصفحات و getActivePharmacists في الفورم). كلها تعدّي على:</p>
+    <ul>
+      <li>authService، prescriptionService، inventoryService، adminUserService</li>
+      <li>كلها تستخدم apiClient اللي بيلزق التوكن</li>
+    </ul>
+    <p>يعني Redux و Query بياكلوا نفس الـ HTTP. الاختلاف بعد الرد: واحد يكتب store، والتاني يكتب cache.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>apiClient و socketService</summary>
+  <div class="ans">
+    <p>apiClient: baseURL من VITE_API_URL، interceptor Authorization.</p>
+    <p>socketService: singleton. getSocket يعمل io على VITE_SOCKET_URL. joinUserRoom يخزّن userId/role ويعمل emit join_room عند connect. disconnect عند الحاجة. AuthInitializer هو اللي يربط الهوية بعد ما Redux يعرف user.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="comp">المكوّنات — تستقبل / تعرض / تبعت</h2>
+
+<article class="card"><details>
+  <summary>main, App, AppRoutes, AppLayout, ProtectedRoute, AuthInitializer</summary>
+  <div class="ans">
+    <p><strong>main:</strong> يركّب store + query + AuthInitializer. مش بيعرض داتا بيزنس.</p>
+    <p><strong>App:</strong> BrowserRouter فقط.</p>
+    <p><strong>AppRoutes:</strong> lazy pages + ProtectedRoute حسب الدور.</p>
+    <p><strong>AppLayout:</strong> Header + StatusBar + Outlet + Navigation. مفيش dispatch.</p>
+    <p><strong>ProtectedRoute:</strong> من auth slice: لو مش initialized لودينج؛ لو مش authenticated → /login؛ لو الدور مش في allowedRoles → /. Outlet لو عدّى.</p>
+    <p><strong>AuthInitializer:</strong> getProfileThunk أو initializeAuth. joinUserRoom. listeners: المريض refresh للروشتة النشطة؛ الصيدلي fetchPending؛ المندوب fetchDelivery. ده العمود الفقري للوقت الفعلي على مستوى التطبيق.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>Header / Navigation / ProcessSteps / StatusBar / Badge / ConfirmModal / ErrorMessage / CameraCapture</summary>
+  <div class="ans">
+    <p><strong>Header:</strong> يقرأ isAuthenticated و user. يعرض روابط حسب الدور. logout() ثم /login.</p>
+    <p><strong>Navigation:</strong> تنقّل سفلي حسب الدور (قراءة من الأوث).</p>
+    <p><strong>ProcessSteps:</strong> يقرأ currentPrescription و isLoading ويحدّد خطوة 1/2/3. عرض فقط.</p>
+    <p><strong>StatusBar / ProcessBanner:</strong> ديكور/تسويق، مش مربوطين بلوجيك.</p>
+    <p><strong>ConfirmModal:</strong> props فتح/رسالة/تأكيد. تسليم التسليم والإدارة يستعملوه قبل mutate/thunk خطير.</p>
+    <p><strong>CameraCapture:</strong> محلي، يرجّع ملف للصورة. الفورم يحوّله Base64.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>LoginPage / RegisterPage / UserProfilePage</summary>
+  <div class="ans">
+    <p><strong>Login:</strong> يستقبل إيميل وباسورد محليًا → loginThunk. يعرض error/isLoading من الأوث. بعد isAuthenticated يوجّه حسب الدور أو redirect query.</p>
+    <p><strong>Register:</strong> نفس الفكرة registerThunk ثم دخول كـ user للرئيسية.</p>
+    <p><strong>Profile:</strong> قيم من user في الـ store → updateProfileThunk. يعرض نجاح/خطأ.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>PrescriptionWorkspace / UploadPrescriptionForm / PrescriptionResult</summary>
+  <div class="ans">
+    <p><strong>Workspace:</strong> لو فيه active_prescription_id ومفيش current يعمل checkPrescriptionStatusThunk. يعرض فورم + نتيجة + الخطوات.</p>
+    <p><strong>Upload form:</strong> Zod. يجيب الصيادلة بـ getActivePharmacistsAPI (useState محلي مش Query ولا Redux). يحول الملف Base64 → processPrescriptionThunk. يعرض لودينج من prescription.isLoading. لو الحالة بقت READY_FOR_CART يعمل reset للفورم.</p>
+    <p><strong>Result:</strong> يقرأ current و warnings. لو مراجعة، يعمل check أولي. أزرار البديل: toggleAlternativeDecision محلي ثم ممكن updatePatientDecisionsThunk. زر السلة → /checkout/:id لو في صنف قابل للشراء والمستخدم authenticated.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>CheckoutPage / CheckoutSuccessPage / PrescriptionHistoryPage</summary>
+  <div class="ans">
+    <p><strong>Checkout:</strong> id من الراوتر. checkPrescriptionStatusThunk. مناديب من getActiveDeliveryRepsAPI (state محلي). Zod عنوان/فون. كاش → checkoutPrescriptionThunk. كارد → createStripeCheckoutSessionAPI ثم window.location لـ url. يعرض items من current.</p>
+    <p><strong>Success:</strong> لو session_id ينادي verifyStripePaymentAPI ثم checkPrescriptionStatusThunk. عرض تهنئة وملخص من current. أزرار تعمل resetPrescriptionState.</p>
+    <p><strong>History:</strong> fetchUserPrescriptionsThunk + سوكت يعيد الجلب. يعرض userPrescriptions. فلتر تبويبات محلي.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>PharmacistDashboard / ReviewModal / PharmacistStats / hooks</summary>
+  <div class="ans">
+    <p><strong>usePharmacistDashboard:</strong> يقرأ pending من الـ store، loadPending = fetchPendingPrescriptionsThunk، سوكت + BroadcastChannel، حالة المودال محلية. handleApprove → approveByPharmacistThunk.</p>
+    <p><strong>Dashboard:</strong> يعرض الجدول من الـ hook. مش بيبعت للـ Query.</p>
+    <p><strong>ReviewModal:</strong> props الروشتة. state محلي لنسخة items قابلة للتعديل. usePharmacistReview → approvePrescription(id, items) اللي هو الـ thunk. onSuccess يقفل.</p>
+    <p><strong>Stats:</strong> pendingCount رقم للعرض.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>DeliveryDashboard</summary>
+  <div class="ans">
+    <p>يقرأ deliveryPrescriptions. عند التحميل fetchDelivery. سوكت يعيد الجلب. تحديث الحالة: ConfirmModal ثم updateDeliveryStatusThunk. تبويبات محلية للفلترة.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>InventoryPage / DrugTable / DrugFormModal</summary>
+  <div class="ans">
+    <p>الصفحة تمسك search/page في useState وتمررهم لـ useGetDrugs. الحذف useDeleteDrug.mutate. المودال إضافة/تعديل: create/update mutations. الجدول يعرض data.drugs ويستدعي onEdit/onDelete. <strong>ولا dispatch لـ Redux.</strong></p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>UserManagementPage / UserTable / UserFormModal</summary>
+  <div class="ans">
+    <p>نفس نمط المخزن على مفتاح admin-users. إنشاء/تعديل/حظر/حذف كلها mutations. الجدول عرض. ConfirmModal قبل الحظر والحذف.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="wf">كل الـ Workflows المهمة — من الفرونت للباك</h2>
+
+<article class="card"><details open>
+  <summary>W1 — استعادة الجلسة عند فتح الموقع</summary>
+  <div class="ans">
+    <div class="flow">AuthInitializer
+  → لو auth_token: getProfileThunk → getProfileAPI
+  → GET /api/auth/profile + protect
+  → getUserProfile
+  → authSlice.fulfilled (isAuthenticated)
+  → joinUserRoom(user._id, role)
+  → ProtectedRoute يسمح بالصفحات</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W2 — تسجيل / دخول</summary>
+  <div class="ans">
+    <div class="flow">LoginPage → loginThunk → loginAPI
+  → POST /auth/login → loginUser (find + matchPassword + generateToken)
+  → localStorage + navigate حسب الدور
+
+RegisterPage → registerThunk → registerUser (create role user)</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W3 — رفع روشتة حتى طابور الصيدلي (العمود الفقري)</summary>
+  <div class="ans">
+    <div class="flow">UploadPrescriptionForm
+  Zod + fileToBase64 + getActivePharmacistsAPI (GET /users/pharmacists)
+  → processPrescriptionThunk → processPrescriptionAPI
+  → POST /prescriptions/process + optionalProtect
+  → processPrescription (Gemini → loop Drug → Interaction → create)
+  → notifyPharmacistNewPrescription
+  → prescriptionSlice: currentPrescription + active_prescription_id
+  → PrescriptionResult يعرض PENDING_PHARMACIST_REVIEW
+
+في نفس اللحظة عند الصيدلي:
+  socket prescription:new
+  → AuthInitializer أو usePharmacistDashboard
+  → fetchPendingPrescriptionsThunk
+  → GET /pending + protect + authorize pharmacist
+  → getPharmacistPrescriptions
+  → pendingPrescriptions في الـ store
+  → PharmacistDashboard يعيد الرسم</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W4 — اعتماد الصيدلي حتى زر السلة عند المريض</summary>
+  <div class="ans">
+    <div class="flow">PrescriptionReviewModal (items محلية)
+  → usePharmacistReview.approvePrescription
+  → approveByPharmacistThunk → PUT pharmacist-approve
+  → approveByPharmacist (ملكية + APPROVED + READY_FOR_CART)
+  → notifyPatientPrescriptionStatus
+
+المريض:
+  socket prescription:status_updated
+  → لو active_prescription_id يطابق
+  → checkPrescriptionStatusThunk → GET /:id
+  → Result يعرض بدائل + الإجمالي
+  → toggleAlternativeDecision و/أو updatePatientDecisionsThunk</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W5 — Checkout كاش</summary>
+  <div class="ans">
+    <div class="flow">CheckoutPage (protect على الراوت user)
+  getActiveDeliveryRepsAPI
+  checkPrescriptionStatusThunk
+  → checkoutPrescriptionThunk
+  → POST /:id/checkout + protect
+  → checkoutPrescription (transaction + خصم Drug + ORDER_PENDING)
+  → notify مريض ومندوب
+  → navigate success
+  → slice يفضي currentPrescription</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W6 — Checkout بطاقة Stripe</summary>
+  <div class="ans">
+    <div class="flow">CheckoutPage
+  → createStripeCheckoutSessionAPI
+  → POST create-checkout-session
+  → createStripeCheckoutSession (حفظ بيانات، session.url، من غير خصم)
+  → redirect Stripe
+  → الرجوع /checkout/success/:id?session_id=
+  → verifyStripePaymentAPI
+  → POST verify-payment
+  → verifyStripePayment (Stripe retrieve + transaction خصم)
+  → checkPrescriptionStatusThunk للعرض</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W7 — المندوب يغيّر الحالة</summary>
+  <div class="ans">
+    <div class="flow">DeliveryDashboard
+  fetchDeliveryPrescriptionsThunk → GET delivery-queue
+  ConfirmModal → updateDeliveryStatusThunk
+  → PUT delivery-status
+  → updateDeliveryStatus
+  → سوكت للمريض (التاريخ يتحدث) وللمندوب</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W8 — سجل المريض</summary>
+  <div class="ans">
+    <div class="flow">PrescriptionHistoryPage
+  fetchUserPrescriptionsThunk → GET my-history + protect
+  → getMyPrescriptions + فلتر READY_FOR_CART الفاضية
+  سوكت status_updated → إعادة نفس الـ thunk</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W9 — المخزن (Query فقط)</summary>
+  <div class="ans">
+    <div class="flow">InventoryPage filters
+  → useGetDrugs → GET /api/drugs → getDrugs
+DrugFormModal submit
+  → useCreateDrug / useUpdateDrug → POST/PUT
+  → invalidate ['drugs']
+حذف → useDeleteDrug → DELETE → invalidate</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W10 — إدارة المستخدمين (Query فقط)</summary>
+  <div class="ans">
+    <div class="flow">UsersManagementPage
+  useGetUsers → GET /api/users + protect admin → getUsers
+إنشاء صيدلي: useCreateUser → createUser
+حظر: useToggleBlockUser → toggleBlockUser
+بعد أي mutation: invalidate admin-users</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W11 — تعديل الملف الشخصي</summary>
+  <div class="ans">
+    <div class="flow">UserProfilePage → updateProfileThunk
+  → PUT /auth/profile + protect → updateUserProfile
+  → توكن جديد في الـ store و localStorage</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W12 — تسجيل خروج</summary>
+  <div class="ans">
+    <p>Header → logout reducer: يمسح localStorage والحالة. مفيش endpoint للـ logout لأن JWT stateless. الحماية الجاية: التوكن تتمسح من العميل. (الحظر على السيرفر لسه يوقف التوكن لو اتسرّبت.)</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>W13 — تشغيل الصوت وازدواج السوكت عند الصيدلي/المندوب</summary>
+  <div class="ans">
+    <p>فيه اشتراكين لنفس الحدث أحيانًا: <code>AuthInitializer</code> (دائم، بيعمل thunk refetch) و<code>usePharmacistDashboard</code> / <code>DeliveryDashboard</code> (صوت + refetch). النتيجة: ممكن الـ fetch يتنادى مرتين. ليه اتساب كده؟ الأول يضمن التحديث لو الشاشة مقفولة؛ التاني يضمن UX الشاشة المفتوحة (صوت). مش مثالي هندسيًا، لكن مفهوم للديمو. في الإنتاج هتخلي مصدر واحد للـ refetch وصوت اختياري في الـ hook.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="svc">طبقة Services — كل فانكشن HTTP</h2>
+<p>دي مش business logic. هي ترجمة TypeScript ↔ REST. الـ thunk أو الـ query بيناديها. المكوّن العادي غالبًا مش بيشوف axios.</p>
+
+<article class="card"><details open>
+  <summary>authService.ts</summary>
+  <div class="ans">
+    <table>
+      <tr><th>فانكشن</th><th>بتاخد</th><th>بتضرب</th><th>بترجع</th></tr>
+      <tr><td>loginAPI</td><td>email, password</td><td>POST /auth/login</td><td>AuthResponse (user + token)</td></tr>
+      <tr><td>registerAPI</td><td>name, email, password</td><td>POST /auth/register</td><td>نفس الشكل</td></tr>
+      <tr><td>getProfileAPI</td><td>—</td><td>GET /auth/profile</td><td>User من غير token (التوكن أصلًا عندك)</td></tr>
+      <tr><td>updateProfileAPI</td><td>name/email/password</td><td>PUT /auth/profile</td><td>AuthResponse بتوكن جديد</td></tr>
+    </table>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>prescriptionService.tsx — كل الاستدعاءات</summary>
+  <div class="ans">
+    <table>
+      <tr><th>فانكشن</th><th>بتاخد</th><th>بتضرب</th><th>بترجع للـ store/UI</th></tr>
+      <tr><td>processPrescriptionAPI</td><td>صورة Base64 + بيانات مريض + pharmacistId</td><td>POST /prescriptions/process</td><td>prescription + status</td></tr>
+      <tr><td>getActivePharmacistsAPI</td><td>—</td><td>GET /users/pharmacists</td><td>مصفوفة {_id,name,email} — الفورم يخزنها في useState مش Redux</td></tr>
+      <tr><td>getActiveDeliveryRepsAPI</td><td>—</td><td>GET /users/delivery-reps</td><td>نفس الفكرة في CheckoutPage</td></tr>
+      <tr><td>getPendingPrescriptionsAPI</td><td>pharmacistId اختياري (الباك بيتجاهله)</td><td>GET /prescriptions/pending</td><td>prescriptions[]</td></tr>
+      <tr><td>approveByPharmacistAPI</td><td>id + updatedItems + pharmacistId في الـ body (الباك يعتمد على التوكن)</td><td>PUT .../pharmacist-approve</td><td>prescription المعتمدة</td></tr>
+      <tr><td>getPrescriptionByIdAPI</td><td>id</td><td>GET /prescriptions/:id</td><td>{ prescription }</td></tr>
+      <tr><td>getUserPrescriptionsAPI</td><td>—</td><td>GET /my-history</td><td>مصفوفة السجل</td></tr>
+      <tr><td>updatePatientDecisionsAPI</td><td>id + items</td><td>PUT .../patient-decisions</td><td>prescription بعد إعادة الحساب</td></tr>
+      <tr><td>checkoutPrescriptionAPI</td><td>بيانات التسليم + paymentMethod + items</td><td>POST .../checkout</td><td>prescription بحالة ORDER_PENDING</td></tr>
+      <tr><td>getDeliveryPrescriptionsAPI</td><td>—</td><td>GET /delivery-queue</td><td>طلبات المندوب</td></tr>
+      <tr><td>updateDeliveryStatusAPI</td><td>id + status + cancelReason</td><td>PUT .../delivery-status</td><td>النسخة المحدّثة</td></tr>
+      <tr><td>createStripeCheckoutSessionAPI</td><td>نفس بيانات الشراء تقريبًا</td><td>POST .../create-checkout-session</td><td>url + sessionId</td></tr>
+      <tr><td>verifyStripePaymentAPI</td><td>prescriptionId + sessionId</td><td>POST .../verify-payment</td><td>prescription بعد التأكيد</td></tr>
+    </table>
+    <div class="why">ليه pharmacistId بيتبعت من الفرونت رغم إن الباك بيستخدم req.user؟ بقايا تصميم/توافق. فهمك الصح: التوكن هو المصدر. لو امتحان قالك «الفرونت يقدر يزوّر الـ id» — الـ approve محمي بالمقارنة مع req.user._id.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>inventoryService.ts و adminUserService.ts</summary>
+  <div class="ans">
+    <p><strong>inventory:</strong> fetchDrugsAPI(params) GET /drugs — createDrugAPI POST — updateDrugAPI PUT /:id — deleteDrugAPI DELETE /:id.</p>
+    <p><strong>admin:</strong> getUsersAPI GET /users?search&role&page — createUserAPI POST /users — updateUserAPI PUT /:id — toggleBlockUserAPI PATCH /:id/block — deleteUserAPI DELETE /:id.</p>
+    <p>كلها ورا protect+admin على الباك ما عدا إن مسارات الأدوية حاليًا من غير middleware (الثغرة اللي في دليل الإنترفيو).</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="boot">الإقلاع: server.js و db و seeder</h2>
+
+<article class="card"><details>
+  <summary><code>server.js</code> بالترتيب ليه كده</summary>
+  <div class="ans">
+    <ol>
+      <li><code>dotenv.config()</code> أول حاجة: باقي الملفات تقرأ JWT_SECRET و MONGO_URI.</li>
+      <li><code>connectDB()</code> يتندى فورًا (async من غير await على مستوى الملف — الاتصال يحصل في الخلفية بينما Express بيتجهز).</li>
+      <li>Express app ثم <code>http.createServer(app)</code> ثم <code>initSocket(server)</code>: نفس البورت للـ REST والـ WebSocket.</li>
+      <li><code>GET /health</code> قبل حتى cors — فحص بسيط للمنصّة.</li>
+      <li>cors + json 50mb + urlencoded 50mb: جسم الروشتة فيه Base64.</li>
+      <li>تركيب الراوتات تحت /api/...</li>
+      <li><code>listen(PORT || 5000, 0.0.0.0)</code>: Railway يعيّن PORT ويوصل من برّه الكونتينر.</li>
+    </ol>
+    <div class="why">من غير HTTP server مشترك السوكت مش هيتعمل له upgrade. من غير 0.0.0.0 السيرفر يسمع localhost جوّه الكونتينر بس.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>connectDB</code></summary>
+  <div class="ans">
+    <p>بتاخد <code>process.env.MONGO_URI</code>، <code>mongoose.connect</code>. نجاح: لوج الهوست. فشل: لوج و <code>process.exit(1)</code> عشان متفضلش خدمة «شغالة» من غير داتابيز. ليه مش retry هنا؟ البساطة؛ المنصّة هتعمل restart.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary><code>seeder.js</code></summary>
+  <div class="ans">
+    <p>سكربت تطوير: يتصل، <code>Drug.deleteMany</code> و <code>Interaction.deleteMany</code>، ثم insert عيّنات (Augmentin, Cataflam, warfarin×diclofenac...). بيتنادى بـ <code>npm run seed</code>. مش جزء من runtime السيرفر. متنفّذوش على إنتاج فيه بيانات حقيقية.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>hooks على User model تاني من زاوية الـ request</summary>
+  <div class="ans">
+    <p>أي <code>User.create</code> أو <code>user.password = x; user.save()</code> يعدّي على pre save. login مش بيعدّي على pre save؛ بيستخدم matchPassword فقط. لو updateUser الأدمن بعت password فاضي، الكود الحالي ما يغيّروش (<code>if (req.body.password)</code>) فلا يعيد التشفير.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="extra-red">extraReducers — إيه اللي بيتكتب في الـ store عند كل حالة</h2>
+
+<article class="card"><details open>
+  <summary>خريطة pending / fulfilled / rejected</summary>
+  <div class="ans">
+    <p>فيه <code>isLoading</code> واحد على شريحة الروشتة. أي thunk pending يشغّله (أو جزء منها). المعنى العملي: رفع روشتة ولودينج طابور الصيدلي يشاركوا نفس العلم — ممكن زر «تحديث» يخلّي الفورم يبان مشغول. للديمو مقبول؛ في الإنتاج flags منفصلة أو RTK loading per-request.</p>
+    <ul>
+      <li><strong>process pending:</strong> isLoading true، يمسح error. <strong>fulfilled:</strong> يحط prescription، warnings، BroadcastChannel NEW_PRESCRIPTION_SUBMITTED، localStorage active id. <strong>rejected:</strong> error الرسالة.</li>
+      <li><strong>fetchPending:</strong> يملأ pendingPrescriptions. مفيش fulfilled يلمس current.</li>
+      <li><strong>approve fulfilled:</strong> filter الطابور. لو current هو نفسه يتحدث + BroadcastChannel NEW_PRESCRIPTION_APPROVED. <em>مفيش pending خاص ظاهر في الكود للـ approve سوى isLoading العام من شريحة تانية لو اتنادى.</em></li>
+      <li><strong>fetchUserHistory:</strong> userPrescriptions = payload.</li>
+      <li><strong>checkout pending/rejected:</strong> لودينج/خطأ. <strong>fulfilled:</strong> يفضي current والـ warnings ويمسح active id — مساحة العمل ترجع فاضية بعد الشراء.</li>
+      <li><strong>updatePatientDecisions fulfilled:</strong> current = الرد (الإجمالي الرسمي).</li>
+      <li><strong>checkStatus fulfilled:</strong> يستبدل current (ودي اللي السوكت بيعتمد عليها للمريض).</li>
+      <li><strong>delivery fetch:</strong> يملأ المصفوفة. <strong>updateDelivery fulfilled:</strong> map تستبدل العنصر.</li>
+    </ul>
+    <p>approve rejected و delivery update rejected: مش كلهم بيكتبوا error في كل case؛ لو سألت في إنترفيو قول: «مش كل المسارات مغطاة بنفس الـ UX للخطأ، وده مكان تحسين».</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>auth extraReducers مقابل initializeAuth</summary>
+  <div class="ans">
+    <p>لو مفيش توكن أصلًا: <code>initializeAuth</code> يخلّي isInitialized true و isAuthenticated false → الضيف يشوف الرئيسية من غير ما ProtectedRoute تستنى للأبد.</p>
+    <p>لو فيه توكن: getProfile pending يشغّل isLoading. النجاح يثبت الجلسة. الفشل يمسح التوكن كأن logout إجباري. ليه متمشيش على user المحفوظ في localStorage كـ authenticated من غير getProfile؟ لأن المستخدم ممكن يكون اتحظر والتوكن لسه في الجهاز.</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="money">حساب الفلوس والمخزن — نفس القاعدة في أكتر من طبقة</h2>
+
+<article class="card"><details open>
+  <summary>إيه الصنف «المشمول» اللي بيتدفع ويتخصم؟</summary>
+  <div class="ans">
+    <p>القاعدة المكررة في checkout و Stripe و verify و Result تقريبًا:</p>
+    <ul>
+      <li>لازم inStock.</li>
+      <li>لو بديل: لازم patientDecision === ACCEPTED (في السيرفر؛ الفرونت أحيانًا يستثني REJECTED و OUT_OF_STOCK صراحة).</li>
+      <li>لازم drugId عشان الخصم (الـ OUT_OF_STOCK مالوش صف مخزن).</li>
+    </ul>
+    <p>الإجمالي = مجموع price × quantity للمشمولين فقط. الفرونت يعرض رقم سريع (toggleAlternativeDecision). السيرفر يعيد الحساب قبل أي خصم أو قبل line_items. <strong>الرقم اللي في الـ request body كـ totalAmount مش موجود أصلًا — الباك مش بيقراه.</strong></p>
+    <div class="why">لو فرونت بعت سعر 1 جنيه جوّه item.price، الـ checkout الحالي بيستخدم الـ items المخزّنة في المستند بعد ما يدمج patientDecision فقط، مش يستبدل السعر من الفرونت. الاعتماد بعد الصيدلي يقدر يغيّر السعر لأنه بيستبدل المصفوفة كلها من updatedItems — هنا الصيدلي هو المصدر، وده مقصود.</div>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>المكوّنات الصغيرة المتبقية</summary>
+  <div class="ans">
+    <p><strong>DrugTable:</strong> تستقبل drugs + callbacks onEdit/onDelete. تعرض صفوف. مش بتعرف Query؛ الأب هو اللي عمل mutate للحذف.</p>
+    <p><strong>DrugFormModal:</strong> تستقبل isOpen و onClose و initialData. <em>هي نفسها</em> بتنادي <code>useCreateDrug</code> و <code>useUpdateDrug</code> (Query جوّه المودال). تفصل المواد بفاصلة لمصفوفة، mutate، وبعد النجاح onClose (الـ invalidate جوّه الـ hook).</p>
+    <p><strong>UserTable:</strong> عرض + أزرار. الأب بيمسك الحظر والحذف.</p>
+    <p><strong>UserFormModal:</strong> فورم غبي نسبيًا: يجمع name/email/password/role ويستدعي <code>onSubmit</code> اللي الصفحة بتحوّله لـ create/update mutation. الفرق عن دواء: الـ mutation مش جوّه المودال.</p>
+    <p><strong>PharmacistStats:</strong> رقم pendingCount فقط.</p>
+    <p><strong>ErrorMessage:</strong> عرض رسالة. مش store.</p>
+    <p><strong>schemas:</strong> processPrescriptionSchema (تليفون مصري 01x، صورة مطلوبة، صيدلي). checkoutSchema (اسم/فون/عنوان/مندوب/طريقة دفع). profileSchema على صفحة البروفايل. دي بوابات شكل؛ الباك يعيد التحقق الناقص.</p>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>ليه قوائم الصيادلة والمناديب مش TanStack Query؟</summary>
+  <div class="ans">
+    <p>اتعملت fetch في useEffect + useState جوّه Upload و Checkout. شغّالة، لكن مفيش كاش مشترك ولا إعادة استخدام. لو سألوك أنسب إيه: «ينفعوا query بمفتاح pharmacists لأنهم نادرين التغيير؛ اتحطوا محليًا وقت بناء الفورم.»</p>
+  </div>
+</details></article>
+
+<h2 class="sec" id="q">أسئلة تخلّيك تتأكد إنك فاهم 100%</h2>
+
+<article class="card"><details open>
+  <summary>جاوب لنفسك بصوت عالي — وبعدين اقرأ الإجابات</summary>
+  <div class="ans">
+    <ol>
+      <li>لو مسحت <code>isInitialized</code>، إيه اللي يحصل لأول زيارة لـ /checkout وأنت عندك توكن؟</li>
+      <li>ليه الدور مش متخزّن جوّه JWT؟</li>
+      <li>مين المصدر اللي الباك بيصدقّه في طابور الصيدلي: query.pharmacistId ولا req.user؟</li>
+      <li>ليه process حط السعر من Drug مش من Gemini؟</li>
+      <li>إيه الفرق بين toggleAlternativeDecision و updatePatientDecisionsThunk؟</li>
+      <li>ليه createStripeCheckoutSession مش بتنقص stock؟</li>
+      <li>لو verify اتنادى مرتين، إيه اللي يمنع خصم مزدوج؟</li>
+      <li>ليه invalidateQueries بعد حذف دواء مش setQueryData؟</li>
+      <li>ليه سجل المريض Redux والتاريخ مش Query؟</li>
+      <li>لو AuthInitializer اتشال، إيه الشاشات اللي هتكسر في الإنتاج؟</li>
+      <li>ليه userId اختياري في الموديل؟</li>
+      <li>إيه اللي يخلّي checkout يرجع 409 مش 400؟</li>
+      <li>ليه register مش بياخد role من body حتى لو اتبعت؟</li>
+      <li>إيه مسار الصنف من PENDING_REVIEW إلى ما يتحسب في Stripe line_items؟</li>
+      <li>لو فرونت بعت totalAmount = 1 جنيه، الباك هيعمل إيه؟</li>
+      <li>ليه getMyPrescriptions بتشيل بعض READY_FOR_CART بعد الجلب؟</li>
+      <li>السوكت join_room: لو عميل كاذب بعت role pharmacist، الباك الحالي هيعمل إيه؟</li>
+      <li>ليه الأدوية مش في prescriptionSlice؟</li>
+      <li>prescriptionSlice.isLoading واحد لكل العمليات — إيه الـ UX side effect؟</li>
+      <li>بعد checkout ناجح، ليه بنفضي currentPrescription؟</li>
+    </ol>
+  </div>
+</details></article>
+
+<article class="card"><details>
+  <summary>مفتاح الإجابات (اتأكد إنك فهمت قبل ما تفتح)</summary>
+  <div class="ans">
+    <ol>
+      <li>isAuthenticated لسه false أثناء getProfile → ProtectedRoute يرميك /login وأنت أصلًا معاك جلسة.</li>
+      <li>الدور والحظر يتغيروا؛ كل protect بيعمل findById فياخد الحقيقة الحالية.</li>
+      <li>req.user._id بعد JWT. الـ query من الفرونت مش مرجع.</li>
+      <li>Gemini مش مصدر تسعير. السعر حقيقة مخزن، وإلا المريض/الموديل يزوّروا الفاتورة.</li>
+      <li>الأول UI فوري على الـ store من غير شبكة. التاني يحفظ القرارات على السيرفر ويعيد الإجمالي الرسمي.</li>
+      <li>المستخدم ممكن يلغي على Stripe. الخصم بعد paid فقط.</li>
+      <li>فحص الحالة لو أصلًا ORDER_* يرجع نجاح؛ وجوّه الـ transaction نفس الفحص قبل $inc.</li>
+      <li>الصفحات والفلاتر كاشات متعددة. invalidate يعيد الجلب الصح لكل المفاتيح الفرعية.</li>
+      <li>السوكت يحدّث من برّه الصفحة ونفس الشكل عبر التبويبات؛ الـ slice أبسط كـ event bus من عشر query keys.</li>
+      <li>تحديث المريض وهو مش على Result، وطابور الصيدلي وهو على البروفايل، وطلبات المندوب وهو في صفحة تانية — الـ listeners كانت بتتشال مع المكوّن.</li>
+      <li>الزائر يرفع قبل الحساب؛ الربط عند checkout بـ protect.</li>
+      <li>findOneAndUpdate مرجعش دواء: الكمية مش مكفية في لحظة السباق.</li>
+      <li>تصعيد صلاحيات. الكوادر من أدمن createUser.</li>
+      <li>AI يحطه PENDING_REVIEW → الصيدلي APPROVED و READY_FOR_CART → المريض ACCEPTED لو بديل → الفلتر includedItems في createStripe.</li>
+      <li>مفيش حقل total من الفرونت بيتاخد. الحساب من الـ document.</li>
+      <li>متعرضش سلة فاضية بعد رفض كل البدائل أو نفاذ الكل.</li>
+      <li>هينضم للرومات. التنفيذ الحالي مش production-secure.</li>
+      <li>CRUD + cache؛ Query. الروشتة رحلة + سوكت؛ Redux.</li>
+      <li>عملية ترفع العلم فتبان شاشة تانية «بتتحمّل» من غير ما تكون هي اللي طلبت.</li>
+      <li>مساحة العمل خلصت؛ الطلب بقى في السجل. متعملش checkout تاني على نفس الكائن المعروض.</li>
+    </ol>
+  </div>
+</details></article>
+
+<p style="margin-top:40px;color:#78716c;font-size:0.88rem;">الملف ده مكمل لـ interview_prep_guide.html: هناك «ليه قررت»، وهنا «الفانكشن بتعمل إيه بالظبط في السلسلة». لو عدّلت كنترولر، حدّث الـ workflow الخاص بيه هنا.</p>
+</main>
+</div>
+<script>
+  const input = document.getElementById("qsearch");
+  const cards = [...document.querySelectorAll("article.card")];
+  input.addEventListener("input", () => {
+    const q = input.value.trim();
+    cards.forEach((card) => {
+      const hit = !q || card.innerText.includes(q);
+      card.classList.toggle("hidden", !hit);
+      if (hit && q) card.querySelector("details")?.setAttribute("open", "");
+    });
+  });
+</script>
+</body>
+</html>

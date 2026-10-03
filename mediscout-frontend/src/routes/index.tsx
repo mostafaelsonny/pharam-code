@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { ProtectedRoute } from '../components/common/ProtectedRoute';
 import { Loader2 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { type RootState } from '../store';
 
 // ============================================================
 // Lazy Loading للصفحات — كل صفحة تُحمَّل فقط عند الحاجة إليها
@@ -78,6 +80,25 @@ const PageLoader: React.FC = () => (
 );
 
 // ============================================================
+// RoleBasedHome — يوجّه المستخدم تلقائياً حسب دوره
+// بعد استعادة الجلسة أو تسجيل الدخول، بدلاً من إبقائه دائماً
+// على صفحة رفع الروشتة (/) سواء كان صيدلياً أو مندوباً أو أدمناً
+// ============================================================
+const RoleBasedHome: React.FC = () => {
+  const { user, isInitialized } = useSelector((state: RootState) => state.auth);
+
+  // لسه التحقق من الجلسة جارٍ — انتظر
+  if (!isInitialized) return <PageLoader />;
+
+  if (user?.role === 'pharmacist') return <Navigate to="/pharmacist/dashboard" replace />;
+  if (user?.role === 'delivery')   return <Navigate to="/delivery/dashboard" replace />;
+  if (user?.role === 'admin')      return <Navigate to="/admin/users" replace />;
+
+  // المريض أو الزائر غير المسجل يرى صفحة رفع الروشتة
+  return <PrescriptionWorkspace />;
+};
+
+// ============================================================
 // AppRoutes — يحتوي على هيكل التوجيه الكامل للتطبيق
 // مقسّم إلى مجموعات حسب الصلاحيات والتخطيط
 // ============================================================
@@ -98,8 +119,8 @@ export const AppRoutes: React.FC = () => {
         ───────────────────────────────────────────────────── */}
         <Route element={<AppLayout />}>
 
-          {/* الصفحة الرئيسية — متاحة للجميع */}
-          <Route path="/" element={<PrescriptionWorkspace />} />
+          {/* الصفحة الرئيسية — تعيد التوجيه تلقائياً حسب الدور */}
+          <Route path="/" element={<RoleBasedHome />} />
           <Route path="/prescription/:id" element={<PrescriptionWorkspace />} />
 
           {/* ─────────────────────────────────────────────────

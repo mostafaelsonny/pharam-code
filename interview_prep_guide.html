@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediScout — دليل إنترفيو الـ Engineering Mindset</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a2332;
+      --muted: #4a5568;
+      --paper: #f4efe6;
+      --card: #fffdf8;
+      --line: #d9cfc0;
+      --teal: #0f6e6b;
+      --teal-dark: #0a4f4d;
+      --amber: #b45309;
+      --amber-bg: #fff4e5;
+      --red: #9b1c1c;
+      --red-bg: #fdecec;
+      --navy: #14213d;
+      --gold: #c9a227;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans Arabic", system-ui, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.85;
+      background-image:
+        radial-gradient(circle at 12% 8%, rgba(15, 110, 107, 0.06), transparent 40%),
+        radial-gradient(circle at 90% 100%, rgba(201, 162, 39, 0.08), transparent 42%);
+    }
+    .wrap {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      background: var(--navy);
+      color: #e8e4d9;
+      padding: 28px 18px 40px;
+      border-left: 4px solid var(--gold);
+    }
+    aside h1 {
+      font-family: Amiri, serif;
+      font-size: 1.55rem;
+      margin: 0 0 4px;
+      color: #fff;
+    }
+    aside .sub { color: #b7c0c8; font-size: 0.82rem; margin-bottom: 18px; }
+    aside input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      background: #1e2d4a;
+      color: #fff;
+    }
+    aside a {
+      display: block;
+      color: #d6ddd8;
+      text-decoration: none;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+    }
+    aside a:hover, aside a.active { background: rgba(201, 162, 39, 0.18); color: #fff; }
+    main { padding: 36px 44px 80px; max-width: 980px; }
+    .hero {
+      background: linear-gradient(135deg, #14213d 0%, #0f6e6b 100%);
+      color: #fff;
+      padding: 28px 30px;
+      border-radius: 18px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -40px; top: -40px;
+      width: 160px; height: 160px;
+      background: rgba(201, 162, 39, 0.25);
+      border-radius: 50%;
+    }
+    .hero h2 { font-family: Amiri, serif; margin: 0 0 10px; font-size: 1.8rem; position: relative; }
+    .hero p { margin: 0; opacity: 0.92; position: relative; }
+    h2.sec {
+      font-family: Amiri, serif;
+      font-size: 1.7rem;
+      color: var(--teal-dark);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 8px;
+      margin: 42px 0 18px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      margin: 0 0 14px;
+      box-shadow: 0 8px 20px rgba(20, 33, 61, 0.04);
+    }
+    details { padding: 0; }
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 18px;
+      font-weight: 700;
+      color: var(--teal-dark);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+      content: "س";
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+    details[open] summary { border-bottom: 1px solid var(--line); }
+    .ans { padding: 4px 18px 18px; color: var(--muted); }
+    .ans p { margin: 10px 0; }
+    .ans ul, .ans ol { margin: 8px 0; padding-right: 22px; }
+    .ans li { margin: 4px 0; }
+    strong { color: var(--ink); }
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .tag-now { background: #d1fae5; color: #065f46; }
+    .tag-gap { background: var(--amber-bg); color: var(--amber); }
+    .tag-prod { background: #e0e7ff; color: #3730a3; }
+    .note, .gap, .say {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+    .note { background: #ecf8f6; border-right: 4px solid var(--teal); }
+    .gap { background: var(--amber-bg); border-right: 4px solid var(--amber); }
+    .say { background: #eef2ff; border-right: 4px solid #4338ca; }
+    .flow {
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      background: #14213d;
+      color: #d7f3ea;
+      padding: 14px 16px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 10px 0;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: right;
+    }
+    th { background: #f3eee4; }
+    .hidden { display: none !important; }
+    footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; }
+    @media (max-width: 900px) {
+      .wrap { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      main { padding: 20px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <aside>
+      <h1>MediScout</h1>
+      <div class="sub">دليل إنترفيو هندسي — عربي بالكامل<br />افتح السؤال، احفظ الفكرة مش السطر.</div>
+      <input id="qsearch" type="search" placeholder="ابحث في الأسئلة..." />
+      <nav>
+        <a href="#mindset">القاعدة الذهبية</a>
+        <a href="#map">خريطة المشروع</a>
+        <a href="#arch">1. المعمارية</a>
+        <a href="#auth">2. المصادقة والصلاحيات</a>
+        <a href="#redux">3. إدارة الحالة</a>
+        <a href="#socket">4. الوقت الفعلي</a>
+        <a href="#db">5. قاعدة البيانات</a>
+        <a href="#workflow">6. دورة الروشتة</a>
+        <a href="#ai">7. الذكاء الاصطناعي</a>
+        <a href="#stripe">8. الدفع</a>
+        <a href="#errors">9. الأخطاء والتحقق</a>
+        <a href="#front">10. الفرونت والراوتنج</a>
+        <a href="#roles">11. الأدوار والصلاحيات</a>
+        <a href="#deploy">12. النشر</a>
+        <a href="#scale">13. التوسع</a>
+        <a href="#gaps">14. الثغرات بصراحة</a>
+        <a href="#extra">15. أسئلة إضافية</a>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="hero" id="mindset">
+        <h2>القاعدة الذهبية للمقابلة</h2>
+        <p>
+          الإنترفيو مش امتحان syntax. هو مقياس: هل تقدر تبرر قراراً هندسياً، تعترف بحدوده، وتقترح تحسيناً من غير ما تدافع عن الكود لأنك كتبته؟
+          لو المحاور قال إن فيه طريقة أحسن: لا ترفض أوتوماتيك، ولا توافق من غير فهم. ناقش الـ trade-off.
+        </p>
+      </section>
+
+      <article class="card">
+        <details open>
+          <summary>لو قالك «الطريقة دي مش الأفضل» هترد إزاي؟</summary>
+          <div class="ans">
+            <p>الصيغة اللي بتثبت engineering mindset:</p>
+            <div class="say">
+              «أتفق من منظور الإنتاج، لأن X. أنا اخترت الطريقة الحالية لأني كنت بأُحسّن لـ Y (سرعة الـ MVP / بساطة الديمو). القيد الموجود فعلاً هو Z. لو بأحسّن المشروع دلوقتي هحوّلها لـ X.»
+            </div>
+            <p>ده مش ضعف. ده معناه إنك مش مرتبط عاطفياً بالكود، وإنك فاهم إن كل قرار له تكلفة.</p>
+          </div>
+        </details>
+      </article>
+
+      <h2 class="sec" id="map">خريطة المشروع في دقيقة</h2>
+      <article class="card">
+        <details open>
+          <summary>MediScout بيعمل إيه؟ ومين الأطراف؟</summary>
+          <div class="ans">
+            <p><strong>MediScout</strong> منصة صيدلية ذكية: المريض يرفع صورة روشتة → Gemini يستخرج الأدوية → النظام يطابق المخزن ويقترح بدائل → الصيدلي يراجع → المريض يقبل/يرفض البدائل ويدفع (كاش أو Stripe) → المندوب يحدّث حالة التوصيل. كل خطوة ليها إشعار لحظي بـ Socket.IO.</p>
+            <table>
+              <tr><th>الدور</th><th>بيعمل إيه</th></tr>
+              <tr><td>user (مريض)</td><td>رفع روشتة، قرارات البدائل، checkout، تتبع الطلب</td></tr>
+              <tr><td>pharmacist</td><td>مراجعة الروشتات المسندة له، تعديل الأصناف، المخزن</td></tr>
+              <tr><td>delivery</td><td>استلام الطلبات المسندة، PROCESSING / COMPLETED / CANCELLED</td></tr>
+              <tr><td>admin</td><td>إدارة المستخدمين، الأدوار، الحظر، إنشاء صيدلي/مندوب</td></tr>
+            </table>
+            <div class="flow">صورة روشتة
+   → Gemini Vision
+   → مطابقة Drug + Interaction
+   → PENDING_PHARMACIST_REVIEW
+   → اعتماد الصيدلي → READY_FOR_CART
+   → قرارات المريض + Checkout
+   → ORDER_PENDING → ORDER_PROCESSING → ORDER_COMPLETED</div>
+            <p><strong>الاستاك الفعلي:</strong> React 19 + TypeScript + Vite + Redux Toolkit + TanStack Query + Zod على الفرونت. Express 5 + MongoDB/Mongoose + JWT + Socket.IO + Gemini + Stripe على الباك. النشر: Vercel (فرونت) + Railway (باك) + MongoDB Atlas.</p>
+          </div>
+        </details>
+      </article>
+
+      <h2 class="sec" id="arch">1. المعمارية — Architecture</h2>
+
+      <article class="card"><details>
+        <summary>ليه قسمت الـ Backend إلى routes / controllers / models / middleware؟ ليه مش الـ logic كله في الـ routes؟</summary>
+        <div class="ans">
+          <p>عشان <strong>Separation of Concerns</strong> و<strong>Single Responsibility</strong>:</p>
+          <ul>
+            <li><strong>Routes:</strong> توصيل الـ HTTP method والمسار بالـ handler، وترتيب الـ middleware (<code>protect</code> ثم <code>authorize</code>).</li>
+            <li><strong>Controllers:</strong> الـ business logic الحالي: Gemini، المطابقة، الـ transaction، Stripe.</li>
+            <li><strong>Models:</strong> شكل البيانات، الـ enums، hooks زي تشفير الباسورد في <code>userModel</code>.</li>
+            <li><strong>Middleware:</strong> اهتمامات عرضية: مين المستخدم؟ هل الدور مسموح؟ من غير تكرار في كل endpoint.</li>
+          </ul>
+          <p>لو اللوجيك في الـ routes: الملفات تتضخم (fat routes)، الاختبار يبقى مربوط بـ <code>req/res</code>، ومش هقدر أعيد استخدام نفس قاعدة «خصم المخزن» من مسار تاني (checkout والكاش وverify Stripe).</p>
+          <div class="gap"><strong>أمانة عن الكود الحالي:</strong> مفيش مجلد <code>services</code> منفصل. الـ controllers مسؤولة عن اللوجيك كله. الـ README بيتكلم عن services كاتجاه معماري، لكن التنفيذ الحالي Controller-centric. لو المشروع كبر هطلع Gemini matching و Stripe و stock deduction لطبقة services عشان الـ controller يفضل رفيع.</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه معنى Clean Architecture في مشروعك تحديداً؟</summary>
+        <div class="ans">
+          <p>مش معناه إن عندي hexagonal كامل. معناه إن حاولت أفصل:</p>
+          <ul>
+            <li><strong>قواعد العمل</strong> (حالات الروشتة، مين يقدر يعمل transition، السعر يتحسب من السيرفر مش من الفرونت).</li>
+            <li><strong>آلية التوصيل</strong> (Express routes، Socket emitters، Stripe session).</li>
+            <li><strong>شكل التخزين</strong> (Mongoose schemas).</li>
+          </ul>
+          <p>مثال حي: إجمالي الفاتورة في الـ checkout بيتحسب تاني من الـ items في الداتابيز، مش بنصدّق الرقم اللي جاي من الفرونت. دي قاعدة عمل مستقلة عن الـ UI.</p>
+          <p>على الفرونت: تنظيم <strong>feature-based</strong> (<code>auth / prescriptions / pharmacist / inventory / delivery / admin</code>) بدل مجلدات components مسطحة، عشان كل دومين يملك الـ UI والـ hooks والـ API بتوعه.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه Express monolith مش NestJS أو microservices؟</summary>
+        <div class="ans">
+          <p>حجم المشروع وفريق من شخص واحد. Express واضح، سريع للـ MVP، وSocket.IO بيتوصل بسهولة على نفس الـ HTTP server. Nest كان هيضيف boilerplate قبل ما تثبت الـ workflow. Microservices دلوقتي هتكون overengineering: شبكة، tracing، عقود بين خدمات، من غير مستخدمين كفاية تبرر التكلفة.</p>
+          <div class="note">لو كبر 10×: هفضل monolith منظم أطول فترة ممكنة، وأطلع أول حاجة تقيلة برّه: معالجة Gemini على worker + queue، لأن دي العملية اللي بتحجز الـ event loop.</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه في <code>server.js</code> عملت <code>http.createServer(app)</code> بدل <code>app.listen</code>؟</summary>
+        <div class="ans">
+          <p>Socket.IO محتاج نفس الـ HTTP server عشان يعمل upgrade من HTTP لـ WebSocket. لو سمعت Express لوحده، الـ REST هيشتغل والسوكت لأ. علشان كده: <code>connectDB</code> → Express app → <code>http.Server</code> → <code>initSocket(server)</code> → <code>server.listen(PORT, '0.0.0.0')</code>.</p>
+          <p><code>0.0.0.0</code> مهم في Railway/Docker: السيرفر يسمع على كل الواجهات مش localhost بس، وإلا الـ reverse proxy مش هيوصل.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه اللي كنت هتغيره لو المشروع كبر 10×؟</summary>
+        <div class="ans">
+          <ul>
+            <li>طبقة <strong>services</strong> حقيقية + error middleware مركزي.</li>
+            <li>Gemini على <strong>job queue</strong> (BullMQ + Redis): الرد الفوري «جاري التحليل» بدل انتظار الـ AI داخل نفس الـ request.</li>
+            <li>الصور على <strong>object storage</strong> (S3) مش Base64 جوه Mongo.</li>
+            <li>Socket.IO Redis adapter لو أكتر من instance.</li>
+            <li>فهارس + pagination إلزامي على الروشتات.</li>
+            <li>Webhook Stripe بدل الاعتماد على صفحة النجاح.</li>
+            <li>مصادقة السوكت بالـ JWT.</li>
+          </ul>
+          <p>المعيار: مش «أضيف Redis لأن الشركات بتستخدمه»، المعيار: المشكلة ظهرت عند حجم معيّن، ساعتها الأداة دي بتحل Y.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه الفرونت TypeScript والباك JavaScript؟</summary>
+        <div class="ans">
+          <p>الـ UI فيه كيانات متداخلة (Prescription, Item, Role, statuses) والـ contract مع الـ API بيتكرر في صفحات كتير؛ TypeScript بيقلل أخطاء الـ props والـ slices. الباك بدأ أسرع بـ JS modules عشان الـ iteration على Gemini والـ workflow. لو كملت المشروع: هحوّل الباك لـ TypeScript أو على الأقل أشارك types عبر OpenAPI.</p>
+          <div class="say">لو سألوك «ده مش consistent»: «صح، ده دين تقني واعي. أولوية الـ typing كانت أعلى في الفرونت لأن تكلفة الـ runtime error هناك أوضح للمستخدم.»</div>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="auth">2. Authentication & Authorization</h2>
+
+      <article class="card"><details>
+        <summary>الفرق بين Authentication و Authorization في مشروعك؟</summary>
+        <div class="ans">
+          <p><strong>Authentication:</strong> إثبات الهوية. الـ JWT بعد login/register، و<code>protect</code> بيتحقق إن التوكن صحيحة والمستخدم موجود ومش محظور.</p>
+          <p><strong>Authorization:</strong> إثبات الصلاحية. <code>authorize('pharmacist')</code> على طابور الصيدلي، ومقارنة <code>prescription.pharmacistId === req.user._id</code> قبل الاعتماد. الأدمن يقدر يفتح صفحة المستخدمين؛ الصيدلي لأ. الصيدلي يقدر يعتمد روشتته هو، مش روشتة صيدلي تاني.</p>
+          <p>على الفرونت: <code>ProtectedRoute</code> بيمنع عرض الصفحة. ده UX مش أمان. الأمان الحقيقي على الباك.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه JWT أصلًا؟ ليه مش Sessions؟</summary>
+        <div class="ans">
+          <p>الفرونت على Vercel والباك على Railway: دومينين مختلفين. الـ JWT stateless: أي instance من الباك يقدر يتحقق بالتوقيع من غير sticky session ومن غير تخزين الجلسة في مونجو. مناسب لـ REST + SPA.</p>
+          <p>الـ Sessions الكلاسيكية (cookie + store) أحسن لو نفس الدومين وعايز revoke فوري وcsrf مضبوط. تكلفتها: session store (Redis)، CORS cookies (<code>credentials</code>، <code>SameSite</code>)، وتعقيد مع Socket.IO.</p>
+          <p>اختياري للـ MVP: JWT في الهيدر <code>Authorization: Bearer</code>.</p>
+          <div class="gap">التوكن عندي صالحة 30 يوم، ومفيش refresh token ومفيش blacklist. لو اتسرّبت تفضل شغالة لحد ما تنتهي، إلا لو حظرت المستخدم (<code>isBlocked</code> بيتشيك في كل request بعد الـ verify).</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>التوكن بتتحط فين؟ مين بيعمل verify؟ السيرفر يعرف المستخدم إزاي؟</summary>
+        <div class="ans">
+          <ol>
+            <li>بعد login/register الباك بيرجع <code>token</code> + بيانات المستخدم.</li>
+            <li>الفرونت يخزن <code>auth_token</code> و<code>auth_user</code> في <code>localStorage</code> (جوه <code>authSlice</code>).</li>
+            <li><code>apiClient</code> interceptor بيحط <code>Bearer</code> على كل طلب.</li>
+            <li><code>protect</code> يعمل <code>jwt.verify(token, JWT_SECRET)</code>، ياخد <code>decoded.id</code>، يجيب المستخدم من مونجو <code>select('-password')</code>، ويحطه على <code>req.user</code>.</li>
+          </ol>
+          <p>الباك عمره ما يثق في <code>userId</code> اللي في الـ body لو المسار محمي. مثال: <code>getMyPrescriptions</code> بفلتر <code>userId: req.user._id</code> من التوكن مش من الفرونت.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه مشاكل تخزين التوكن في localStorage؟ هل JWT لوحده كفاية؟</summary>
+        <div class="ans">
+          <p>أي XSS يقدر يقرأ <code>localStorage</code> ويسرق الجلسة. الـ httpOnly cookie أصعب على السكربتات، لكنها تحتاج إعداد CSRF وCORS cookies.</p>
+          <p>JWT لوحده مش كفاية: محتاج HTTPS، صلاحية معقولة، تحقق من الحظر، وauthorization على مستوى المورد (ownership)، ومعدل طلبات، ومراجعة دور التسجيل (محدش يسجّل نفسه صيدلي).</p>
+          <p>عندي: التسجيل دايمًا <code>role: 'user'</code>. الصيدلي والمندوب والأدمن بيتخلقوا من الأدمن. ده قرار أمني صح.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إزاي منعت صيدلي يعدّل روشتة مش بتاعته؟</summary>
+        <div class="ans">
+          <p>طبقتين:</p>
+          <ol>
+            <li><code>protect + authorize('pharmacist')</code> على <code>PUT /:id/pharmacist-approve</code> — لو مش صيدلي → 403.</li>
+            <li>داخل <code>approveByPharmacist</code>: لو <code>prescription.pharmacistId !== req.user._id</code> → 403 «غير مصرح لك بتعديل هذه الروشتة».</li>
+          </ol>
+          <p>نفس الفكرة للمندوب في <code>updateDeliveryStatus</code> مع <code>deliveryId</code>.</p>
+          <p>الجلب كمان مفلتر: طابور الصيدلي <code>pharmacistId: req.user._id</code> + status المراجعة. مش بنرجّع روشتات العالم كله.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه فايدة <code>optionalProtect</code>؟ ليه الزائر يقدر يرفع روشتة؟</summary>
+        <div class="ans">
+          <p>تجربة المريض: يصور الروشتة من غير حساب، ويشوف النتيجة. لو فيه توكن، بنربط <code>userId</code>. لو مفيش، الروشتة تتخلق من غير مستخدم وتتربط عند الـ checkout (<code>prescription.userId = req.user._id</code>) لأن الـ checkout نفسه ورا <code>protect</code>.</p>
+          <p>ده trade-off بين التحويل (conversion) وبين التتبع. القيد: روشتات يتيمة ممكن تتراكم، ومسار جلب الروشتة بالـ ID مفتوح نسبيًا.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه حكاية <code>isInitialized</code> في الفرونت؟</summary>
+        <div class="ans">
+          <p>عند أول تحميل: فيه توكن في localStorage، و<code>getProfileThunk</code> لسه ما خلصش. لو <code>ProtectedRoute</code> حكم من <code>isAuthenticated === false</code> هيرمي المستخدم للوجين وهو أصلًا لوجد إن. <code>isInitialized</code> معناها: «خلّصت محاولة التحقق». طول ما هي false نعرض لودينج. بعدين نقرر login أو دخول.</p>
+          <p>دي قصة engineering حلوة: race بين الـ persist والـ async verification.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>الحظر <code>isBlocked</code> بيشتغل إزاي؟</summary>
+        <div class="ans">
+          <p>الأدمن يعمل toggle. في اللوجين: لو محظور → 403. في كل طلب محمي: بعد verify، لو <code>req.user.isBlocked</code> → 403. يعني حتى لو التوكن لسه صالحة، الجلسة تموت على أول API call. مفيش حاجة تلغي التوكن نفسها على السوكت إلا لو قفلنا الاتصال يدويًا.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="redux">3. Redux Toolkit و TanStack Query</h2>
+
+      <article class="card"><details>
+        <summary>ليه Redux أصلًا؟ ليه مش Context API لكل حاجة؟</summary>
+        <div class="ans">
+          <p>عندي حالة بتتكتب من أماكن كتير ومش شجرة مكوّنات واحدة: رفع روشتة، داشبورد صيدلي، صفحة نجاح Stripe، AuthInitializer، سوكت. Redux Toolkit اداني store واحد، slices واضحة، و<code>createAsyncThunk</code> لحالات loading/error.</p>
+          <p>Context ينفع لحالة نادرة التغيير (ثيم، لغة). لو حطيت الروشتات والأوث في Context من غير تقسيم، أي تحديث للـ currentPrescription يعيد رسم شجرة كبيرة. كمان منطق الـ extraReducers للـ async أدق من useEffect متناثر.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه مش PharmacistDashboard يمسك الـ state ويبعتها props؟</summary>
+        <div class="ans">
+          <p>لأن الإشعار لازم يوصل حتى لو الداشبورد مش متركب. حطيت listeners في <code>AuthInitializer</code> على مستوى التطبيق. لو الحالة عايشة جوه الداشبورد بس: المستخدم لو راح للملف الشخصي هيفوت إشعار، أو هتحتاج prop drilling عبر Layout. الـ store هنا bus للأحداث عبر الصفحات.</p>
+          <p>وفي نفس الوقت: حالة المودال المفتوح (<code>selectedPrescription</code>, <code>isReviewOpen</code>) محلية في <code>usePharmacistDashboard</code> لأنها UI state مش محتاجة تبقى global.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه الفرق بين server state و client state؟ إيه اللي يستحق يبقى global؟</summary>
+        <div class="ans">
+          <p><strong>Server state:</strong> نسخة من الداتابيز ممكن تتقادم (قائمة أدوية، قائمة يوزرز). الأفضل cache + invalidate. ده عندي بـ <strong>TanStack Query</strong> في المخزن وإدارة المستخدمين: <code>queryKey: ['drugs', params]</code> وبعد الـ mutation <code>invalidateQueries</code>.</p>
+          <p><strong>Client state:</strong> اختيار الصيدلي قبل الرفع، قرار قبول بديل لحظي قبل الحفظ، حالة المودال، التوكن بعد اللوجين.</p>
+          <p><strong>Global عندي في Redux:</strong> auth (مستخدم عبر كل الـ ProtectedRoute)، currentPrescription ومسارها عبر صفحات متعددة + سوكت، طوابير الصيدلي/المندوب لأنها بتتحدث من خارج الشاشة.</p>
+          <div class="note">ليه الاتنين مع بعض؟ الروشتة مش CRUD عادي: تدفق + أحداث لحظية + قرارات محلية قبل الـ persist. المخزن CRUD كلاسيكي Query بتلمع فيه. لو حطيت الأدوية في Redux كنت هأعيد اختراع cache.</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إمتى Redux يبقى overkill؟</summary>
+        <div class="ans">
+          <p>صفحة واحدة، مفيش سوكت، مفيش مشاركة حالة عبر راوتس. ساعتها useState + React Query كفاية. MediScout فيه 4 أدوار وworkflow أطول من شاشة؛ Toolkit هنا مش استعراض، هو تقليل مصدر الحقيقة المتناقض.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه فايدة <code>toggleAlternativeDecision</code> في الـ slice؟</summary>
+        <div class="ans">
+          <p>ده client state: المريض يضغط قبول/رفض بديل، الإجمالي يتحدث فورًا من غير راوند تريب. بعدين بن싱크 السيرفر بـ <code>updatePatientDecisions</code> أو مع الـ checkout. السعر النهائي برضو بيتحسب من السيرفر عشان محدش يزوّر الإجمالي.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="socket">4. Socket.IO والوقت الفعلي</h2>
+
+      <article class="card"><details>
+        <summary>ليه Socket.IO؟ ليه مش polling؟ ليه مش SSE؟</summary>
+        <div class="ans">
+          <p><strong>Polling:</strong> كل كام ثانية GET. بسيط، لكن تأخير + ضغط على السيرفر والداتابيز، خصوصًا لو 100 صيدلي فاتحين الداشبورد.</p>
+          <p><strong>SSE:</strong> سيرفر → عميل فقط، فوق HTTP. ممتاز للإشعارات في اتجاه واحد. عندي أحداث من المريض للصيدلي والعكس والمندوب؛ وفي المستقبل ممكن أحتاج قنوات أوسع. كمان SSE وراء بعض البروكسيات أصعب، ومفيش rooms جاهزة.</p>
+          <p><strong>Socket.IO:</strong> ثنائي الاتجاه، rooms، fallback لـ polling لو الـ WebSocket اتقفل (الـ client عندي <code>transports: ['websocket', 'polling']</code>)، وreconnect.</p>
+          <p>Socket.IO بيشتغل فوق Engine.IO، والـ WebSocket نفسه upgrade لبروتوكول ثنائي الاتجاه على اتصال TCP طويل، عكس HTTP request/response اللي بيقفل بعد الرد.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه rooms؟ ليه <code>user_${userId}</code> و<code>role_pharmacist</code>؟</summary>
+        <div class="ans">
+          <p>الـ room قناة بث لمجموعة سوكتات. <code>user_abc</code> توصل لنفس الشخص على أكتر من تاب. <code>pharmacist_${id}</code> للصيدلي المحدد. <code>role_pharmacist</code> لو حبيت أنبه كل الصيادلة (عندي مستخدم كـ fallback).</p>
+          <p>النية الهندسية: توجيه الحدث للطرف الصح بدل ما كل العملاء يفلتروا.</p>
+          <div class="gap"><strong>التنفيذ الحالي للديمو:</strong> بعد ما بعت للـ rooms، في <code>notifyPharmacistNewPrescription</code> و<code>notifyPatientPrescriptionStatus</code> فيه <code>io.emit(...)</code> بث عام لكل المتصلين. كمان <code>join_room</code> بياخد <code>userId</code> و<code>role</code> من العميل من غير JWT على السوكت. أي عميل يقدر يدّعي إنه صيدلي وينضم للرومات. CORS السوكت <code>origin: '*'</code>.</div>
+          <div class="say">الجملة الجاهزة: «التنفيذ مناسب لـ MVP/إنترفيو ديمو. في production هوثّق السوكت بالـ JWT عند الـ handshake، الهوية من التوكن مش من العميل، وهشيل الـ broadcast العام، وهحدد origin.»</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>مين المفروض يحدد هوية المستخدم؟ هل نصدّق العميل لو قال أنا pharmacist؟</summary>
+        <div class="ans">
+          <p>المفروض السيرفر فقط، بعد verify للتوكن. حالياً العميل في <code>socketService.joinUserRoom(user._id, user.role)</code> بعد ما Redux يعرف المستخدم من الـ profile — يعني النية صح على الفرونت، لكن الباك مش بيفرضها. ده أضعف نقطة real-time عندي وأنا واعي بيها.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه listeners في AuthInitializer مش بس في الداشبورد؟ وليه BroadcastChannel؟</summary>
+        <div class="ans">
+          <p>في الإنتاج اكتشفنا إن الـ listener لو اتربط بمكوّن بيتفك عند التنقل، فالصيدلي ممكن يكون على صفحة تانية ومفيش تحديث. الحل: اشتراك دائم حسب الدور في <code>AuthInitializer</code>.</p>
+          <p><code>BroadcastChannel('prescription_events')</code> تزامن بين تبويبات نفس المتصفح (رفع روشتة في تاب وداشبورد في تاب تانية) حتى لو السوكت اتأخر. ده مكمل محلي، مش بديل للسيرفر.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="db">5. MongoDB ونمذجة البيانات</h2>
+
+      <article class="card"><details>
+        <summary>ليه MongoDB مش PostgreSQL؟ إمتى الـ relational أنسب؟</summary>
+        <div class="ans">
+          <p>الروشتة document غني ومتداخل: patientInfo، items بأحوال توفر وبدائل وقرارات، تحذيرات تفاعل، صورة. قراءتها كوحدة واحدة طبيعية في document store، والتطوير أسرع مع Mongoose.</p>
+          <p>PostgreSQL أنسب لو: تقارير مالية معقدة، قيود علاقات صارمة عبر جداول كتير، joins تقيلة، متطلبات ACID على مستوى النظام كله من اليوم الأول، أو فريق أصلاً SQL.</p>
+          <p>المخزن والكميات علاقات أوضح في SQL، وأنا عوّضت بـ transaction + <code>findOneAndUpdate</code> الشرطي.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إمتى embedding وإمتى referencing؟ ليه pharmacistId وuserId reference؟</summary>
+        <div class="ans">
+          <p><strong>Embedded items:</strong> لقطة (snapshot) لحالة الصنف وقت الروشتة: الاسم، السعر، الجرعة، قرار المريض. لو سعر الدواء اتغيّر بعد أسبوع، الفاتورة القديمة متتغيرش. كمان الروشتة تتقرا كاملة من غير populate لكل سطر.</p>
+          <p><strong>drugId reference:</strong> عشان نخصم من نفس سجل المخزن.</p>
+          <p><strong>userId / pharmacistId / deliveryId:</strong> مستخدمين بيتحدثوا (اسم، حظر، دور). مرجع مش نسخ، مع populate للاسم والإيميل عند العرض.</p>
+          <p><strong>warningsFound embedded:</strong> نتيجة الفحص وقت التحليل، أرشيف طبي للروشتة دي.</p>
+          <p><strong>originalImage embedded Base64:</strong> سهل للديمو، سيئ للإنتاج (حجم المستند، الـ 16MB limit، الـ backups).</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه الـ transaction في الـ checkout؟ إيه مشكلة الـ consistency اللي بتحلها؟</summary>
+        <div class="ans">
+          <p>الـ checkout بيعمل أكتر من كتابة: تحديث الروشتة + خصم أكتر من دواء. من غير transaction: ممكن أخصم دواءين والتالت يفشل، أو أخصم المخزن والـ save يفشل فالأوردر ما يتسجلش.</p>
+          <p>استخدم <code>mongoose.startSession()</code> و<code>withTransaction</code>. الخصم: <code>findOneAndUpdate({ stockQuantity: { $gte: qty } }, { $inc: { stockQuantity: -qty } })</code> داخل نفس الـ session. لو الكمية مش مكفية → 409 والعملية كلها ترجع.</p>
+          <p>دي حماية من <strong>lost update / oversell</strong>: مريضين يطلبوا آخر علبة في نفس اللحظة.</p>
+          <p>نفس النمط في <code>verifyStripePayment</code> بعد التأكد إن Stripe <code>paid</code>.</p>
+          <div class="note">Transactions في Mongo محتاجة replica set. Atlas بتوفّرها. لو حد سألك على local Mongo قديم: هتفشل.</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه السعر والكمية مش بنصدق الفرونت؟</summary>
+        <div class="ans">
+          <p>أي عميل يقدر يعدل JSON. الإجمالي يتحسب على السيرفر من items المخزّنة وقرارات القبول. Stripe line_items كمان من السيرفر بالجنيه × 100 (قروش) لأن Stripe بيشتغل بأصغر وحدة عملة.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>فيه indexes؟ الـ email unique؟</summary>
+        <div class="ans">
+          <p><code>email</code> unique في user schema. غير كده الـ queries زي <code>Prescription.find({ pharmacistId, status })</code> و<code>Drug.find({ tradeName: regex })</code> من غير index صريح. مع آلاف الروشتات هيمشي؛ مع مئات الآلاف هيبقى collection scan. الإنتاج: index مركّب <code>{ pharmacistId: 1, status: 1, createdAt: -1 }</code> ونفس الفكرة لـ userId و deliveryId.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>موديل Interaction والتداخل الدوائي؟</summary>
+        <div class="ans">
+          <p>أزواج مواد فعالة + خطورة CRITICAL/MODERATE/LOW. بعد استخراج أدوية الروشتة، بنجمع المواد ونبحث <code>ingredientA $in list AND ingredientB $in list</code>. النتيجة بتتخزن في <code>warningsFound</code> عشان الصيدلي يشوفها. في الـ seeder مثال warfarin + diclofenac.</p>
+          <p>القيد: مش محرك دوائي كامل (جرعات، أمراض مزمنة). قاعدة بيانات صغيرة للديمو الطبي.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="workflow">6. دورة حياة الروشتة — أهم جزء</h2>
+
+      <article class="card"><details open>
+        <summary>احفظ الـ state machine، مش الكود</summary>
+        <div class="ans">
+          <div class="flow">PENDING
+   → PENDING_PHARMACIST_REVIEW
+   → READY_FOR_CART
+   → ORDER_PENDING
+   → ORDER_PROCESSING
+   → ORDER_COMPLETED
+
+READY_FOR_CART ──→ CANCELLED (عن طريق المندوب حالياً من الحالات المسموحة بعد الإسناد)
+ORDER_PENDING ──→ ORDER_PROCESSING | ORDER_COMPLETED | CANCELLED</div>
+          <table>
+            <tr><th>الحالة</th><th>المعنى</th><th>مين يحرّك</th></tr>
+            <tr><td>PENDING</td><td>مذكورة في الـ enum كاستخراج AI</td><td>عملياً الـ create بيحط مراجعة الصيدلي مباشرة</td></tr>
+            <tr><td>PENDING_PHARMACIST_REVIEW</td><td>الصيدلي لازم يراجع</td><td>processPrescription</td></tr>
+            <tr><td>READY_FOR_CART</td><td>معتمدة وفي انتظار شراء المريض</td><td>approveByPharmacist</td></tr>
+            <tr><td>ORDER_PENDING</td><td>طلب اتأكد (كاش أو دفع كارد ناجح)</td><td>checkout أو verifyStripe</td></tr>
+            <tr><td>ORDER_PROCESSING</td><td>المندوب بدأ التوصيل</td><td>updateDeliveryStatus</td></tr>
+            <tr><td>ORDER_COMPLETED</td><td>تم التسليم</td><td>المندوب</td></tr>
+            <tr><td>CANCELLED</td><td>إلغاء مع سبب اختياري</td><td>المندوب (الحالات المسموحة في الكود)</td></tr>
+          </table>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه statuses مش Boolean زي isApproved؟</summary>
+        <div class="ans">
+          <p>الـ Boolean يوصف بعد ثنائي واحد. هنا مسار متعدد: مراجعة ≠ جاهزة للسلة ≠ قيد التجهيز ≠ في الطريق ≠ مكتملة ≠ ملغاة. لو عملت isApproved و isPaid و isDelivered هتلاقي تركيبات مستحيلة (delivered من غير paid). الـ enum آلة حالات: في لحظة واحدة حالة واحدة.</p>
+          <p>كمان الفلترة بسيطة: طابور الصيدلي = status واحدة. سجل المريض = مجموعة حالات.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>الفرق بين اعتماد الصيدلي وتجهيز الأوردر؟</summary>
+        <div class="ans">
+          <p><strong>Pharmacist approval:</strong> قرار طبي/صيدلي على الأصناف والبدائل والملاحظات. بيحوّل READY_FOR_CART ويحسب الإجمالي من الأصناف المتوفرة. المريض لسه ما اشترى.</p>
+          <p><strong>Order processing:</strong> لوجستيات بعد ما الطلب اتأكد: خصم مخزن حصل، مندوب، توصيل. مينفعش المندوب «يعتمد بديل دوائي». مينفعش الصيدلي من المسار الحالي يعلّم ORDER_COMPLETED.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه اللي يمنع transition غلط؟</summary>
+        <div class="ans">
+          <p>أمثلة من الكود:</p>
+          <ul>
+            <li>Checkout لو status مش READY_FOR_CART → 400 «غير جاهزة أو تم طلبها».</li>
+            <li>المندوب يقبل بس PROCESSING / COMPLETED / CANCELLED.</li>
+            <li>Stripe session لو مش READY_FOR_CART → 400.</li>
+            <li>الصيدلي لازم ownership.</li>
+          </ul>
+          <div class="gap">مفيش آلة حالات مركزية (state machine table). القواعد موزعة جوه الـ controllers. ينفع في الحجم الحالي؛ لو كبر هعمل دالة <code>assertTransition(from, to, actor)</code> عشان منساش مسار.</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>مسار الصنف جوه الروشتة (مش حالة الروشتة)</summary>
+        <div class="ans">
+          <p>كل item له:</p>
+          <ul>
+            <li><code>availabilityStatus</code>: AVAILABLE / ALTERNATIVE_AVAILABLE / OUT_OF_STOCK</li>
+            <li><code>reviewStatus</code>: PENDING_REVIEW → APPROVED (بعد الصيدلي)</li>
+            <li><code>patientDecision</code>: ACCEPTED / REJECTED للبديل</li>
+          </ul>
+          <p>سجل المريض يخفي READY_FOR_CART لو مفيش صنف قابل للشراء (كله نفذ أو المريض رفض البدائل). ده فلتر منتج مش status جديدة.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ملاحظة مهمة: <code>READY_FOR_CART</code> بعد الـ AI مباشرة نادرة</summary>
+        <div class="ans">
+          <p>في <code>processPrescription</code> كل فروع المطابقة بتحط <code>requiresPharmacistReview = true</code>. يعني عملياً كل روشتة بتدخل مراجعة صيدلي. المتغير والفرع READY_FOR_CART موجودين كتصميم مستقبلي (روشتة واضحة 100% ومخزن كامل من غير لبس) لكن دلوقتي المسار الإلزامي هو المراجعة البشرية — وده منطقي طبياً.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="ai">7. Gemini واستخراج الروشتة</h2>
+
+      <article class="card"><details>
+        <summary>ليه التحليل على الباك مش الفرونت؟</summary>
+        <div class="ans">
+          <p>مفتاح Gemini سري. لو اتحط في الفرونت أي حد يسرقه. كمان منطق المطابقة مع المخزن لازم يشوف الداتابيز. الفرونت بيبعت الصورة Base64 + بيانات التواصل + pharmacistId.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>خطوات processPrescription بالترتيب</summary>
+        <div class="ans">
+          <ol>
+            <li>تحقق من الصورة والتليفون والعنوان وpharmacistId.</li>
+            <li>Gemini Vision يرجع JSON أدوية (اسم تجاري، مادة فعالة، جرعة).</li>
+            <li>لكل دواء: مطابقة tradeName في المخزن وكمية &gt; 0، وإلا بديل بنفس المادة الفعالة، وإلا OUT_OF_STOCK.</li>
+            <li>جمع المواد وفحص Interaction.</li>
+            <li>إنشاء Prescription بحالة المراجعة، وتخزين الصورة.</li>
+            <li>notifyPharmacistNewPrescription.</li>
+          </ol>
+          <div class="gap">المطابقة بـ regex case-insensitive ممكن تمسك اسم جزئي غلط. JSON.parse على رد Gemini من غير تنظيف markdown ممكن يكسر لو الموديل لف الرد في ```. الـ body limit 50mb عشان الصور؛ ده باب كبير لو مفيش rate limit.</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه الكمية الافتراضية 1؟</summary>
+        <div class="ans">
+          <p>الـ OCR مش دايمًا بيقرا الكمية بثقة. الصيدلي يقدر يعدّل الأصناف قبل الاعتماد. قرار MVP: دقة أقل في الكمية مقابل عدم اختراع رقم. في الإنتاج: prompt أقوى + تأكيد صيدلي إلزامي على الكمية.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="stripe">8. Stripe والمدفوعات</h2>
+
+      <article class="card"><details>
+        <summary>ارسم تدفق الدفع</summary>
+        <div class="ans">
+          <div class="flow">User (READY_FOR_CART)
+  → POST create-checkout-session  (protect)
+  → Stripe Checkout hosted page
+  → Payment
+  → success_url?session_id=...
+  → CheckoutSuccessPage ينادي verify-payment
+  → السيرفر retrieve session من Stripe
+  → لو paid: transaction خصم مخزن + ORDER_PENDING</div>
+          <p>مسار الكاش: checkout مباشر على السيرفر من غير Stripe، نفس خصم المخزن والتحول ORDER_PENDING.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه الـ secret على الباك والـ publishable على الفرونت؟</summary>
+        <div class="ans">
+          <p><strong>Secret key</strong> يقدر يعمل تحويلات ويقرأ عملاء. أي كشف = كارثة مالية. <strong>Publishable key</strong> مصممة للمتصفح لبدء عناصر الدفع، ومش بتعمل capture لوحدها.</p>
+          <p>حالياً بنحوّل المستخدم لـ <code>session.url</code>hosted؛ الـ publishable أقل مركزية مما لو Stripe.js عناصر مدمجة. المبدأ ثابت: أسرار السيرفر متطلعش.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>هل الفرونت يقدر يقول «أنا دفعت» ونصدقه؟ ليه صفحة النجاح مش كفاية؟ ليه Webhook؟</summary>
+        <div class="ans">
+          <p>لأ. أي حد يفتح <code>/checkout/success/:id</code>. علشان كده verify بيسأل Stripe عن الـ session، يطابق <code>client_reference_id</code> مع الروشتة، ويطابق metadata.userId مع req.user، ويتأكد <code>payment_status === 'paid'</code>.</p>
+          <p>مشكلة صفحة النجاح وحدها: المستخدم يقفل التاب قبل ما الـ request يتم، الشبكة تقطع، فيتحول فلوس وتتخصمش من المخزن أو العكس.</p>
+          <p><strong>Webhook</strong> <code>checkout.session.completed</code> رسالة من Stripe لسيرفرك مع توقيع. ده مصدر الحقيقة في الإنتاج، ويشتغل حتى لو المستخدم اختفى.</p>
+          <div class="say">«التحقق من صفحة النجاح موجود كـ MVP. مخطط الإنتاج: webhook + نفس منطق الـ idempotency. صفحة النجاح تبقى UX مش مصدر تأكيد الدفع.»</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه idempotency هنا؟</summary>
+        <div class="ans">
+          <p>نفس عملية التأكيد لو اتنفذت مرتين متخصمش المخزن مرتين. في verify: لو الحالة أصلًا ORDER_PENDING/PROCESSING/COMPLETED نرجع نجاح من غير خصم. وجوه الـ transaction نفس الفحص تاني (سباق بين تبويبين). ده يدوي. Stripe كمان بيدعم Idempotency-Key على إنشاء الـ session.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه FRONTEND_URL في بيئة السيرفر؟</summary>
+        <div class="ans">
+          <p>Stripe يحتاج success/cancel مطلقين. في المحلي localhost:5173، في الإنتاج دومين Vercel. لو سيبناها localhost والمستخدم على Vercel، بعد الدفع هيرجع لعنوان مش موجود.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="errors">9. الأخطاء والتحقق</h2>
+
+      <article class="card"><details>
+        <summary>ليه centralized error handling؟ عندك موجود؟</summary>
+        <div class="ans">
+          <p>الفكرة: controllers ترمي Error بعد ما تحدد <code>res.status</code>، وmiddleware أخير يوحّد شكل JSON ويتجنب سقوط البروسيس.</p>
+          <p>أنا استخدم <code>express-async-handler</code> عشان الـ reject يروح لـ next(err). <strong>لكن مفيش error middleware مسجّل في server.js</strong> ولا notFound. في Express 5 السلوك أحسن من 4، لكن الاستجابة مش موحّدة بالشكل الاحترافي.</p>
+          <div class="say">«ده دين تقني. الخطوة الجاية: errorHandler يرجّع {message} ويتكلم، ويميّز CastError و ValidationError عن 500 العام.»</div>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>الفرق بين 400 401 403 404 409 500</summary>
+        <div class="ans">
+          <table>
+            <tr><th>الكود</th><th>المعنى في MediScout</th></tr>
+            <tr><td>400</td><td>طلب غلط: نقص صورة، checkout والحالة مش جاهزة، session مش للروشتة</td></tr>
+            <tr><td>401</td><td>مش متعرّف: مفيش توكن / توكن بايظة / يوزر اتمسح</td></tr>
+            <tr><td>403</td><td>متعرّف لكن ممنوع: دور غلط، صيدلي تاني، محظور، session مش لمستخدمك</td></tr>
+            <tr><td>404</td><td>المورد مش موجود</td></tr>
+            <tr><td>409</td><td>تعارض: المخزن اتنقص قبل ما تخلّص</td></tr>
+            <tr><td>500</td><td>فشل سيرفر: Stripe مش متهيأ، انهيار غير متوقع</td></tr>
+          </table>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>طبقات التحقق: Validation vs Authn vs Authz vs Business vs DB</summary>
+        <div class="ans">
+          <ul>
+            <li><strong>Validation:</strong> Zod على الفرونت (تليفون مصري، عنوان). على الباك فحوصات يدوية (حقول مطلوبة). الفرونت للراحة؛ الباك للحماية.</li>
+            <li><strong>Authentication:</strong> توكن.</li>
+            <li><strong>Authorization:</strong> دور + ملكية المورد.</li>
+            <li><strong>Business rules:</strong> READY_FOR_CART قبل الدفع، كمية مخزن، أصناف مقبولة فقط.</li>
+            <li><strong>DB errors:</strong> duplicate email، سقوط أطلس.</li>
+          </ul>
+          <p>لو مونجو وقعت: الاتصال في <code>connectDB</code> يعمل <code>process.exit(1)</code> عند البدء. أثناء التشغيل الطلبات هتفشل. في الإنتاج: healthcheck <code>GET /health</code> + إعادة تشغيل Railway + مراقبة.</p>
+          <p>هل أثق في الـ input من الفرونت؟ لا. أبداً.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>مسارات الأدوية من غير protect — هتعترف بيها؟</summary>
+        <div class="ans">
+          <p>نعم. <code>drugRoutes</code> مفيهاش <code>protect/authorize</code>. أي حد يعرف الـ API يقدر يضيف أو يمسح دواء. الواجهة بتظهر المخزن للصيدلي/أدمن فقط، بس ده مش أمان. نفس الفكرة تقريبًا لـ interactions/check.</p>
+          <div class="say">«دي ثغرة واضحة في الـ MVP. هقفّلها authorize('pharmacist','admin') على الكتابة.»</div>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="front">10. الفرونت: راوتنج، أداء، نماذج</h2>
+
+      <article class="card"><details>
+        <summary>ليه lazy loading للصفحات؟</summary>
+        <div class="ans">
+          <p>المريض مش محتاج باقة الأدمن. <code>React.lazy + Suspense</code> في <code>routes/index.tsx</code> يقلل الـ bundle الأولي. App نفسها رفيعة: Router فقط، والـ AuthInitializer برّه في main.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ProtectedRoute على الفرونت يكفي؟</summary>
+        <div class="ans">
+          <p>لأ. ده لمنع الضياع في الـ UX. المهاجم يعدّي الراوتر وينادي الـ API. الدفاع: middleware الباك.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه React Hook Form + Zod؟</summary>
+        <div class="ans">
+          <p>التحكم في فورم كبير (رفع روشتة / checkout) من غير إعادة رسم كل حرف. Zod schema مصدر حقيقة لنوع البيانات ورسائل عربي. بس ده الطبقة الأولى فقط.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه Axios interceptor؟</summary>
+        <div class="ans">
+          <p>مكان واحد لإضافة التوكن وbaseURL من <code>VITE_API_URL</code>. من غير كده كل service هتنسى الهيدر.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>Pagination على الأدمن والمخزن</summary>
+        <div class="ans">
+          <p>getUsers و getDrugs: page/limit/skip + countDocuments. الواجهة مش بتجيب كل اليوزرز. الروشتات عند الصيدلي لسه find() من غير صفحات — مقبول لطابور صغير، مش لمليون مستند.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="roles">11. الأدوار، الأدمن، المخزن، التوصيل</h2>
+
+      <article class="card"><details>
+        <summary>مين بيخلق الصيدلي والمندوب؟</summary>
+        <div class="ans">
+          <p>التسجيل العام user فقط. الأدمن POST /api/users يختار role. قوائم الصيادلة/المناديب للمريض: مستخدمين role مناسب و<code>isBlocked: false</code>، ومش بنرجّع باسورد.</p>
+          <p>الأدمن مينفعش يحظر أو يحذف نفسه.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>كلمة السر</summary>
+        <div class="ans">
+          <p>bcrypt في pre('save') لو الباسورد اتعدّل. المقارنة <code>matchPassword</code>. عمرنا ما نرجّع حقل password في الـ JSON (<code>select('-password')</code>).</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>المخزن ليه Query مش Redux؟</summary>
+        <div class="ans">
+          <p>CRUD + فلاتر + cache. بعد create/update/delete نعمل invalidate لمفتاح drugs. مفيش سوكت على تغيير السعر حالياً. لو حبيت كل الكاشيرات تشوف الكمية لحظياً بعد checkout، ساعتها إما invalidate من حدث سوكت أو تحدث الـ query.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="deploy">12. النشر، CORS، البيئة</h2>
+
+      <article class="card"><details>
+        <summary>ليه Vercel للفرونت وRailway للباك وAtlas للداتابيز؟</summary>
+        <div class="ans">
+          <p><strong>Vercel:</strong> CDN، بناء Vite تلقائي، مناسب لـ SPA ثابتة. مش مناسب لسوكت طويل العمر (serverless functions بتروح للنوم).</p>
+          <p><strong>Railway:</strong> بروسيس Node مستمر، WebSocket، PORT من البيئة، مناسب لـ Express + Socket.IO. (بعض الوثائق القديمة ممكن تذكر Render؛ المبدأ واحد: سيرفر طويل العمر مش serverless).</p>
+          <p><strong>Atlas:</strong> replica set جاهز للـ transactions، نسخ احتياطي، من غير ما أدير VM.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>يعني إيه Origin؟ ليه CORS ظهر بعد ما local كان شغال؟</summary>
+        <div class="ans">
+          <p>المتصفح بيمنع فرونت على دومين (mediscout.vercel.app) ينادي API على دومين تاني (railway) إلا لو السيرفر يبعت رؤوس CORS تسمح بالـ Origin ده. على localhost أحيانًا الأدوات أهدى أو نفس الجهاز فتخيّل إن مفيش مشكلة، أو cors() مفتوح للكل فعدّى.</p>
+          <p>عندي <code>app.use(cors())</code> يسمح لأي origin — سهل للديمو وخطر في الإنتاج لو الـ API عليه عمليات حساسة من غير قيود تانية. المفروض whitelist لـ FRONTEND_URL.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه environment variables؟ ليه PORT من البيئة؟</summary>
+        <div class="ans">
+          <p>الأسرار والمنافذ بتختلف بين جهازك وRailway. المنصة تعيّن PORT؛ لو سمعت 5000 ثابت في الإنتاج البروكسي مش هيلاقيك. الفرونت: أي متغير لازم يبدأ بـ <code>VITE_</code> عشان يتحقن وقت البناء — وده يعني مفيش أسرار حقيقية في فرونت Vite.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه local اشتغل وproduction ظهر case-sensitivity؟</summary>
+        <div class="ans">
+          <p>ويندوز غالباً case-insensitive. Linux (Vercel/Railway) حساس. استيراد <code>./Index.css</code> لازم يطابق اسم الملف حرفياً (الملف عندي <code>Index.css</code>). أي فرق User.tsx vs user.tsx يكسر البناء على لينكس بس. الدرس: وحّد التسمية، وخليك واعي إن نجاح ويندوز مش ضمان إنتاج.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه فايدة /health؟</summary>
+        <div class="ans">
+          <p>منصات النشر تعمل ping. لو السيرفر ميت تrestart. كمان أبسط إثبات إن الخدمة فوق من غير ما تعدي على مونجو (الـ health الحالي بيرجع ok بس — نسخة أقوى تفحص mongoose.connection.readyState).</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="scale">13. التفكير في التوسع</h2>
+
+      <article class="card"><details>
+        <summary>1000 صيدلي بدل 10 — إيه اللي يحصل؟</summary>
+        <div class="ans">
+          <p>البث العام <code>io.emit</code> هيزق كل الأحداث لكل العملاء. كل صيدلي هيستقبل شغل غيره ويعتمد على فلتر الفرونت. الحل: rooms موثّقة + شيل الـ broadcast. الطوابير find من غير index هتبطأ. الإشعارات الصوتية والريفetch الجماعي هيضغطوا الـ API.</p>
+          <p>Redis مش أول خطوة سحرية؛ أول خطوة توجيه صحيح + indexes. Redis يدخل لما تحتاج presence أو pub/sub عبر instances.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>مليون روشتة — هل find() الحالي يكفي؟</summary>
+        <div class="ans">
+          <p>لأ. هنحتاج indexes، pagination/cursor، وما نرجعش originalImage في قوائم الطوابير (projection). الصورة Base64 هتكبّر كل document وتقتل الـ memory. فصل الوسائط عن الميتاداتا.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>Socket.IO على سيرفر واحد، وبعدين 5 instances؟</summary>
+        <div class="ans">
+          <p>العميل ممكن يتوصل لـ instance A والصيدلي على B. <code>io.to(room).emit</code> محلي للبروسيس. الحل: <strong>Redis adapter</strong> لـ Socket.IO عشان الـ pub/sub بين النسخ. وكمان sticky sessions أو أن الـ adapter يكفي. Load balancer لازم يدعم WebSocket upgrade.</p>
+          <p>من غير كده: إشعارات ضايعة بشكل عشوائي. ده مثال كلاسيكي «الشغل على لابتوب يخفي مشكلة التوزيع».</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>Rate limiting, queues, caching, monitoring — إمتى؟</summary>
+        <div class="ans">
+          <ul>
+            <li><strong>Rate limit:</strong> فورًا تقريبًا على /process و/auth لأن Gemini غالي وفي إساءة.</li>
+            <li><strong>Queue:</strong> لما زمن Gemini يبقى أطول من تحمل HTTP أو يبطّئ باقي الـ API.</li>
+            <li><strong>Cache:</strong> قائمة صيادلة/مناديب تتغير نادرًا.</li>
+            <li><strong>Monitoring:</strong> logs منظمة، تنبيه على 5xx ونسبة فشل الدفع.</li>
+          </ul>
+          <p>الجملة الذهبية: «المشكلة X تظهر عند حجم معيّن، وساعتها Redis/Queue مناسب لحل Y. على حجم الديمو الحالي الإضافة overengineering.»</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="gaps">14. ثغرات أعترف بيها بهدوء (ده بيزوّد درجتك)</h2>
+
+      <article class="card"><details>
+        <summary>قائمة الـ production gaps من الكود الفعلي</summary>
+        <div class="ans">
+          <ol>
+            <li>سوكت: هوية من العميل + io.emit عام + origin *.</li>
+            <li>مفيش Stripe webhook.</li>
+            <li>مسارات الأدوية من غير صلاحيات كتابة.</li>
+            <li><code>GET /prescriptions/:id</code> بـ optionalProtect من غير فحص ملكية — ومعاها الصورة.</li>
+            <li><code>updatePatientDecisions</code> من غير ربط صارم بالمالك.</li>
+            <li>مفيش error middleware موحّد.</li>
+            <li>توكن 30 يوم في localStorage، مفيش refresh.</li>
+            <li>صور Base64 في Mongo + حد 50mb.</li>
+            <li>مفيش indexes على طوابير الروشتات.</li>
+            <li>مطابقة أدوية regex هشّة.</li>
+            <li>بيانات صحية (روشتات) من غير تشفير حقل أو سياسات احتفاظ — للديمو فقط، مش HIPAA.</li>
+          </ol>
+          <p>الاعتراف المنظم أحسن من إن المحاور يكتشفها وإنت بتبرر.</p>
+        </div>
+      </details></article>
+
+      <h2 class="sec" id="extra">15. أسئلة إضافية متوقعة — غطّي الزوايا الباقية</h2>
+
+      <article class="card"><details>
+        <summary>ليه مفيش GraphQL؟</summary>
+        <div class="ans"><p>REST كافٍ للموارد الواضحة. GraphQL تكلفة schema وN+1 وcaching. هفكر فيه لو الموبايل حابب يقلل over-fetch للقوائم.</p></div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه Vite مش CRA؟</summary>
+        <div class="ans"><p>سرعة ESM، بناء أحدث، ودعم Tailwind 4 plugin. CRA متوقف عملياً.</p></div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه فايدة seeder؟</summary>
+        <div class="ans"><p>بيانات أدوية وتداخلات للعرض من غير إدخال يدوي. يمسح Drug وInteraction ويعيد الإدراج. مش آمن على إنتاج فيه بيانات حقيقية — سكربت تطوير.</p></div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ترتيب الراوتات الديناميكية ليه في الآخر؟</summary>
+        <div class="ans"><p><code>/pharmacist-queue</code> قبل <code>/:id</code> وإلا Express يفهم pharmacist-queue كأنه ObjectId. نفس الفكرة في userRoutes: /pharmacists قبل /:id.</p></div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>ليه populate أحياناً ومرات لأ؟</summary>
+        <div class="ans"><p>الطابور الداخلي للصيدلي يكفي IDs. عرض التاريخ للمريض يحتاج اسم الصيدلي. populate تكلفة join منطقي؛ مش بحطه في كل query.</p></div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>الأمان الطبي: ده تطبيق صحي؟</summary>
+        <div class="ans">
+          <p>الديمو بيعالج بيانات حساسة (صورة روشتة، تليفون، عنوان). في الإنتاج الحقيقي: موافقة، تشفير at rest، Retention policy، عدم البث العام للسوكت، عدم رمي الصورة في كل إشعار. أنا بقدّمه كمشروع هندسي مش كمنتج طبي معتمد.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إزاي تختبر الـ checkout من غير ما تدمّر المخزن؟</summary>
+        <div class="ans"><p>Stripe test keys، كروت اختبار، وtransaction ترجع لو الكمية ناقصة. سيناريو السباق: طلبين متوازيين على آخر قطعة — واحد 409.</p></div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>إيه أصعب باج هندسي اتعلم منه؟</summary>
+        <div class="ans">
+          <p>جهّز قصتين من شغلك الفعلي:</p>
+          <ol>
+            <li><strong>Listeners تتشال في الإنتاج:</strong> نقل الاشتراك لـ AuthInitializer.</li>
+            <li><strong>Case sensitivity / بيئة مختلفة:</strong> ويندوز vs لينكس، ORIGIN، FRONTEND_URL، PORT.</li>
+          </ol>
+          <p>احكي: العرض → السبب الجذري → الإصلاح → الدرس المعماري. ده أقوى من أي تعريف محفوظ.</p>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>لو عندك أسبوع hardening قبل الإنتاج، الترتيب؟</summary>
+        <div class="ans">
+          <ol>
+            <li>قفل drug routes + ملكية GET prescription و patient-decisions.</li>
+            <li>JWT على السوكت، شيل io.emit العام، CORS مضبوط.</li>
+            <li>Stripe webhook + idempotency.</li>
+            <li>Error middleware + rate limit على AI واللوجين.</li>
+            <li>صور على storage، projection للقوائم، indexes.</li>
+            <li>تقصير عمر التوكن / httpOnly cookie لو الوقت يكفي.</li>
+          </ol>
+        </div>
+      </details></article>
+
+      <article class="card"><details>
+        <summary>جمل قصيرة تتقالي لو الوقت خلص</summary>
+        <div class="ans">
+          <ul>
+            <li>«الفرونت للتجربة، الباك للحقيقة.»</li>
+            <li>«الحالة آلة مش مجموعة أعلام.»</li>
+            <li>«السعر والمخزن والدفع مصدرهم السيرفر.»</li>
+            <li>«الـ real-time في الديمو موجّه بالنية، وفي الإنتاج موجّه بالتوكن.»</li>
+            <li>«كل أداة بتتحط لما الألم يظهر، مش لأنها trending.»</li>
+          </ul>
+        </div>
+      </details></article>
+
+      <footer>
+        الملف مبني على قراءة الكود الفعلي لـ MediScout (controllers، socket.js، authSlice، AuthInitializer، Stripe verify، transactions). حدّثه لو غيّرت مسار الدفع أو قفلت ثغرة، عشان إجابتك تفضل مطابقة للريبو.
+      </footer>
+    </main>
+  </div>
+  <script>
+    const input = document.getElementById("qsearch");
+    const cards = [...document.querySelectorAll("article.card")];
+    input.addEventListener("input", () => {
+      const q = input.value.trim();
+      cards.forEach((card) => {
+        const hit = !q || card.innerText.includes(q);
+        card.classList.toggle("hidden", !hit);
+        if (hit && q) card.querySelector("details")?.setAttribute("open", "");
+      });
+    });
+  </script>
+</body>
+</html>
